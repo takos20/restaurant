@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+    <style type="text/css">
+        @page {
+            size: a4;
+            margin: 1cm;
+        }
+
+        .table {
+            border: 0.5px solid #ababab;
+            text-align: center;
+            table-layout: fixed;
+            margin-bottom: 5px;
+        }
+
+        .table tr td {
+            white-space: nowrap;
+        }
+
+        .table th {
+            padding: 5px;
+            vertical-align: top;
+            background-color: #e8e8e8;
+        }
+
+        .table td {
+            padding: 5px;
+            vertical-align: top;
+            -pdf-keep-with-next: false;
+            overflow: hidden;
+            text-overflow: ellipsis;
+
+
+        }
+    </style>
+</head>
+
+<body>
+<table>
+
+    <div class="ui segment itemscard">
+        <div class="content">
+          <table >
+          
+            <tbody>
+              <tr>
+                <td class="text-left" align="center" style="font-family:Verdana, Geneva, sans-serif; font-weight:900; font-size:20px;color: black" width="170">
+                  <img id="logo" style="border: 1px solid #ddd;
+          border-radius: 4px;
+          padding: 5px;
+          width: 200px;" src="/media/logo.png">
+                </td>
+                <td class="text-left" align="center" style="font-family:Verdana, Geneva, sans-serif; font-weight:500; font-size:18px">
+                </td>
+                <td class="text-left" align="center" style="font-family:Verdana, Geneva, sans-serif; font-weight:700; font-size:18px;color: black">
+                </td>
+                <td class="text-left" align="center" style="font-family:Verdana, Geneva, sans-serif; font-weight:500; font-size:18px;color: black">
+                </td>
+                <td class="text-left" align="center" style="font-family:Verdana, Geneva, sans-serif; font-weight:700; font-size:18px;color: black">
+                </td>
+                <td class="text-left" align="center" style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:18px;color: black" width="230">
+                  <div><span class="mono">{{ hospital.name }}</span></div>
+                  <div><span class="mono">{{ hospital.address }}</span></div>
+                  <div><span class="mono">Tel: {{ hospital.phone }}</span></div>
+                  <div><span class="mono">Email: {{ hospital.email }}</span></div>
+                </td>
+                
+              </tr>
+            </tbody>
+          </table>
+      
+        </div>
+      </div>
+      <br>
+    
+</table>
+<table>
+    <tr>
+        <td style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:17px;" colspan="2"
+            align="center">LISTE DES ACTES MEDICAUX
+        </td>
+    </tr>
+    <tr>
+        <td style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:13px;" colspan="2"
+            align="left"></td>
+    </tr>
+    {#<tr>#}
+    {#        <td style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:13px;"  colspan="2" align="center">Du : {{date}}</td>#}
+    {#      </tr>#}
+    {#<tr>#}
+    {#    <td colspan="2"><img src="logo.png" width="150"  /></td>#}
+    {#  </tr>#}
+
+    <tr>
+        <td colspan="2">
+        </td>
+    </tr>
+</table>
+<table class="table">
+    <thead>
+    <tr>
+        <th style="color: black">Code</th>
+        <th style="color: black">Nom</th>
+        <th style="color: black">Domaine medical</th>
+        <th style="color: black">Prix</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for medical_act in medical_acts %}
+        <tr style="text-align: center">
+            <td class="td">{{ medical_act.code }}</td>
+            <td class="td">{{ medical_act.name|linebreaks }}</td>
+            <td class="td">{{ medical_act.medical_areas.name|linebreaks }}</td>
+            <td class="td">{{ medical_act.price }}</td>
+        </tr>
+
+    {% endfor %}
+    </tbody>
+</table>
+
+
+{#<td width="51%" valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">#}
+{#      <div style="text-align:right"><span style="font-family:Verdana, Geneva, sans-serif; font-weight:600; font-size:13px; border-top:1px solid #333; border-bottom:1px solid #333;">Montant total:</span> {{MontantT}} FCFA</div>#}
+{#   <div style="text-align:right"><span style="font-family:Verdana, Geneva, sans-serif; font-weight:600; font-size:13px; border-top:1px solid #333; border-bottom:1px solid #333;">Montant perçu:</span> {{Advance}} FCFA</div>#}
+{#   <div style="text-align:right"><span style="font-family:Verdana, Geneva, sans-serif; font-weight:600; font-size:13px; border-top:1px solid #333; border-bottom:1px solid #333;">Reste a payer:</span> {{Left_to_pay}} FCFA</div>#}
+{#   <div style="text-align:right"><span style="font-family:Verdana, Geneva, sans-serif; font-weight:600; font-size:13px; border-top:1px solid #333; border-bottom:1px solid #333;">Remboursement:</span> {{Repayment}} FCFA</div>#}
+{##}
+{#    </table></td>#}
+
+</body>
+
+</html>

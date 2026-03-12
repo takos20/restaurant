@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load humanize %}
+{% load static %}
+<head>
+    <style type="text/css">
+        @page {
+            size: a4;
+            margin: 5mm;
+
+    
+             @frame footer_frame {
+                   -pdf-frame-content:footer_content;
+                   left:60pt;
+                   width:512pt;
+                   top:772pt;
+                   height:100pt
+             }
+             
+            
+        }
+        
+        .table {
+            border: 0.5px solid #ababab;
+            text-align: center;
+            table-layout: fixed;
+            margin-bottom: 5px;
+        }
+        .table tr td {
+            white-space: nowrap;
+        }
+
+        .table th {
+            padding: 5px;
+            vertical-align: top;
+            background-color: #e8e8e8;
+        }
+
+        .table td {
+            padding: 5px;
+            vertical-align: top;
+            -pdf-keep-with-next: false;
+            overflow: hidden;
+            text-overflow: ellipsis;
+
+
+        }
+        
+    </style>
+</head>
+
+<body>
+<div class="ui segment itemscard" >
+      <div class="content">
+        <table >
+        
+          <tbody>
+            <tr>
+              <td style="font-family:Verdana, Geneva, sans-serif; font-weight:500; font-size:15px;" align="center" > </td>
+  
+              <td class="text-left" align="center" style="font-family:Verdana, Geneva, sans-serif; font-weight:900; font-size:20px;color: black; margin-top: 50px;" width="150">
+                <img id="logo" style="border: 1px solid #ddd;
+        border-radius: 4px;
+        padding: 5px;
+        width: 200px;" src="/media/logo.png">
+              </td>
+        
+  
+              <td class="text-left" align="center" style="font-family:Verdana, Geneva, sans-serif; font-weight:500; font-size:18px;color: black" width="230">
+                <!-- <div><span class="mono">{{ hospital.address }}</span></div>
+                <div><span class="mono">Tel: {{ hospital.phone }}</span></div>
+                <div><span class="mono">Email: {{ hospital.email }}</span></div> -->
+              </td>
+              
+            </tr>
+          </tbody>
+        </table>
+    
+      </div>
+    </div>
+    <div class="ui segment itemscard">
+      <div class="content">
+        <table >
+        
+          <tbody>
+            <tr>
+              <td style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:15px;" align="left" >
+                <div><span class="mono">Patient: {{ consultation.patient.name }}</span></div>
+                <div><span class="mono">Age: {{ consultation.patient.age }} ans</span></div>
+                </td>
+  
+              <td class="text-left" align="center" style="font-family:Verdana, Geneva, sans-serif; font-weight:900; font-size:20px;color: black; margin-top: 50px;" width="120">
+                
+              </td>
+        
+  
+              <td class="text-left" align="right" style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:15px;color: black" width="230">
+                <div><span class="mono">Date: {{ consultation.createdAt|date:'Y-m-d' }} à {{ consultation.timeAt|date:'H:i:s' }}</span></div>
+                <!-- <div><span class="mono">{{ hospital.address }}</span></div>
+                <div><span class="mono">Tel: {{ hospital.phone }}</span></div>
+                <div><span class="mono">Email: {{ hospital.email }}</span></div> -->
+              </td>
+              
+            </tr>
+          </tbody>
+        </table>
+    
+      </div>
+    </div>
+
+  <table>
+  <tr>
+    <td style="font-family:Verdana, Geneva, sans-serif; font-weight:400; font-size:18px;" align="center" colspan="2">RAPPORT MEDICAL</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+  </tr>
+  </table>
+
+  <tr>
+    <td align="center"><div><span class="mono" style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:15px;">{{ details_consultation.report }}</span></div></td>
+  </tr>
+</tr>
+</div>
+<div id="footer_content">
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+  <table >
+    
+    <tbody>
+      <tr>
+        <td class="text-left" align="center" style="font-family:Verdana, Geneva, sans-serif; font-weight:400; font-size:13px;" >
+          {{ hospital.zip_code }} - {{ hospital.address }} - Tel: {{ hospital.phone }}
+        </td>
+          
+      </tr>
+    </tbody>
+    <table >
+    
+      <tbody>
+        <tr>
+          <td class="text-left" align="center" style="font-family:Verdana, Geneva, sans-serif; font-weight:400; font-size:13px;" >
+            Email: {{ hospital.email }}
+          </td>
+            
+        </tr>
+      </tbody>
+  </table>
+</div>
+</body>
+
+<footer> 
+  
+  
+</footer>
+</html>

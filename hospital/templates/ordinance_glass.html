@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load humanize %}
+{% load static %}
+<head>
+    <style type="text/css">
+        @page {
+            size: a4;
+            margin: 5mm;
+
+    
+             @frame footer_frame {
+                   -pdf-frame-content:footer_content;
+                   left:60pt;
+                   width:512pt;
+                   top:772pt;
+                   height:100pt
+             }
+             
+            
+        }
+        
+        .table {
+            border: 0.5px solid #ababab;
+            text-align: center;
+            table-layout: fixed;
+            margin-bottom: 5px;
+        }
+        .table tr td {
+            white-space: nowrap;
+        }
+
+        .table th {
+            padding: 5px;
+            vertical-align: top;
+            background-color: #e8e8e8;
+        }
+
+        .table td {
+            padding: 5px;
+            vertical-align: top;
+            -pdf-keep-with-next: false;
+            overflow: hidden;
+            text-overflow: ellipsis;
+
+
+        }
+        
+    </style>
+</head>
+
+<body>
+<div class="ui segment itemscard" >
+      <div class="content">
+        <table >
+        
+          <tbody>
+            <tr>
+              <td style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:15px;" align="center" > </td>
+  
+              <td class="text-left" align="center" style="font-family:Verdana, Geneva, sans-serif; font-weight:900; font-size:20px;color: black; margin-top: 50px;" width="150">
+                <img id="logo" style="border: 1px solid #ddd;
+        border-radius: 4px;
+        padding: 5px;
+        width: 200px;" src="/media/logo.png">
+              </td>
+        
+  
+              <td class="text-left" align="center" style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:15px;color: black" width="230">
+                <!-- <div><span class="mono">{{ hospital.address }}</span></div>
+                <div><span class="mono">Tel: {{ hospital.phone }}</span></div>
+                <div><span class="mono">Email: {{ hospital.email }}</span></div> -->
+              </td>
+              
+            </tr>
+          </tbody>
+        </table>
+    
+      </div>
+    </div>
+    <div class="ui segment itemscard">
+      <div class="content">
+        <table >
+        
+          <tbody>
+            <tr>
+              <td style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:15px;" align="left" >
+                <div><span class="mono">Patient: {{ consultation.patient.name }}</span></div>
+                <div><span class="mono">Age: {{ consultation.patient.age }} ans</span></div>
+                </td>
+  
+              <td class="text-left" align="center" style="font-family:Verdana, Geneva, sans-serif; font-weight:900; font-size:20px;color: black; margin-top: 50px;" width="120">
+                
+              </td>
+        
+  
+              <td class="text-left" align="right" style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:15px;color: black" width="230">
+                <div><span class="mono">Date: {{ consultation.createdAt|date:'Y-m-d' }} à {{ consultation.timeAt|date:'H:i:s' }}</span></div>
+                <!-- <div><span class="mono">{{ hospital.address }}</span></div>
+                <div><span class="mono">Tel: {{ hospital.phone }}</span></div>
+                <div><span class="mono">Email: {{ hospital.email }}</span></div> -->
+              </td>
+              
+            </tr>
+          </tbody>
+        </table>
+    
+      </div>
+    </div>
+
+  <table>
+    <table>
+      <tr>
+        <td style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:15px;" align="center" colspan="2">ORDONNANCE</td>
+      </tr>
+      <!-- <tr>
+        <td style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:15px;" colspan="2" align="center">Date: {{ consultation.createdAt|date:'Y-m-d' }} à {{ consultation.timeAt|date:'H:i:s' }}</td>
+      </tr> -->
+      <tr>
+        <td>&nbsp;</td>
+      </tr>
+      </table>
+      <div class="ui segment itemscard">
+    
+        <div class="content">
+        
+        <table class="ui celled table">
+        
+            <tbody>
+                <tr>
+                    <td class="text-left" align="left" style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:15px;">
+                      Vision
+                    </td>
+                    <td class="text-left" align="left" style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:15px;">
+                      Oeil
+                    </td>
+                    <td class="text-center" align="center">
+                        <span class="mono" style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:15px;">
+                                      Spherique
+                                  </span>
+                        
+                      </td>            
+                      <td class="text-center" align="center">
+                        <span class="mono" style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:15px;">
+    Cylindre                              
+    </span>
+                        
+                      </td>            
+                      <td class="text-center" align="center">
+                        <span class="mono"style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:15px;">
+    Axe                              </span>
+                        
+                      </td> 
+                    
+                  </tr>
+                <tr>
+                    <td class="text-left" align="left" style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:15px; border-bottom: 1px solid white;">
+                        Loin
+                      
+                    </td>
+                    <td class="text-left" align="left" style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:15px;">
+                        OD
+                      
+                    </td>
+                    <td class="text-center" align="center">
+                        <span class="mono" style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:15px;">
+                                      {{details_consultation.gp_vd_spherical_right_eye_one}}
+                                  </span>
+                        
+                      </td>            
+                      <td class="text-center" align="center">
+                        <span class="mono" style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:15px;">
+                                      {{details_consultation.gp_vd_cylinder_right_eye_one}}
+                                  </span>
+                        
+                      </td>            
+                      <td class="text-center" align="center">
+                        <span class="mono"style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:15px;">
+                                      {{details_consultation.gp_vd_axis_right_eye}}
+                                  </span>
+                        
+                      </td>            
+                    
+                  </tr>
+                  <tr>
+                    <td class="text-left" align="left" style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:15px;border-top: 1px solid white;">
+                      
+                    </td>
+                    <td class="text-left" align="left" style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:15px;">
+                        OG
+                      
+                    </td>
+                    <td class="text-center" align="center">
+                        <span class="mono" style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:15px;">
+                                      {{details_consultation.gp_vd_spherical_left_eye_one}}
+                                  </span>
+                        
+                      </td>            
+                      <td class="text-center" align="center">
+                        <span class="mono" style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:15px;">
+                                      {{details_consultation.gp_vd_cylinder_left_eye_one}}
+                                  </span>
+                        
+                      </td>            
+                      <td class="text-center" align="center">
+                        <span class="mono" style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:15px;">
+                                      {{details_consultation.gp_vd_axis_left_eye}}
+                                  </span>
+                        
+                      </td>           
+                    
+                  </tr>
+                  <tr>
+                    <td class="text-left" align="left" style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:15px;" width="107">
+                        Pres
+                      
+                    </td>
+                    <td class="text-left" align="left" style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:15px;" width="107">
+                        ADD
+                      
+                    </td>
+                    <td class="text-center" align="center" style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:15px;border-right: 1px solid white">
+                        <span class="mono" >
+    
+                                  </span>
+    </td>
+    <td class="text-center" align="center" style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:15px;border-left: 1px solid white;border-right: 1px solid white">
+    
+                                  <span class="mono" style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:15px;">
+                                    {{details_consultation.gp_vn_cylinder_right_eye_one}}
+                                </span>
+    </td>
+    <td class="text-center" align="center" style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:15px;border-left: 1px solid white"> 
+    
+                                <span class="mono" >
+    
+                                </span>
+                        
+                      </td>            
+                      
+                  </tr>
+                  <!-- <tr>
+                    <td class="text-left" align="left" style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:15px;">
+                      
+                    </td>
+                    <td class="text-left" align="left" style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:15px;">
+                        ODG
+                      
+                    </td>
+                    <td class="text-center" align="center">
+                        <span class="mono" style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:15px;">
+                                      {{details_consultation.gp_vd_spherical_left_right_eye_one}} | {{details_consultation.gp_vd_spherical_left_righ_eye_two}}
+                                  </span>
+                        
+                      </td>            
+                      <td class="text-center" align="center">
+                        <span class="mono" style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:15px;">
+                                      {{details_consultation.gp_vd_cylinder_left_righ_eye_one}} | {{details_consultation.gp_vd_cylinder_left_righ_eye_two}}
+                                  </span>
+                        
+                      </td>            
+                      <td class="text-center" align="center">
+                        <span class="mono" style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:15px;">
+                                      {{details_consultation.gp_vd_axis_left_righ_eye}}
+                                  </span>
+                        
+                      </td>            
+                    
+                  </tr> -->
+            </tbody>
+          </table>
+          <br>
+    -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        <br>
+    <table >
+        
+            <tbody>
+              <tr>
+                <td class="text-left" align="left" style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:15px;">
+                  E I P:
+                </td> <td class="text-left" align="left" style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:15px;" width="30">
+                  OD:
+                </td>
+                <td class="text-left" align="left" style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:15px;" width="120">
+                  {% if details_consultation.exp_od is None %}
+                  RAS
+                  {% else %}
+                  {{details_consultation.exp_od}}
+                  {% endif %}
+                </td>
+                <td class="text-left" align="left" style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:15px;" width="30">
+                  OG:
+                </td>
+                <td class="text-left" align="left" style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:15px;" width="120">
+                  {% if details_consultation.exp_og is None %}
+                  RAS
+                  {% else %}
+                  {{details_consultation.exp_og}}
+                  {% endif %}
+                  </td>
+                <td class="text-left" align="left" style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:15px;">
+                    ODG:
+                </td>
+                <td class="text-left" align="left" style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:15px;" width="120">
+                  {% if details_consultation.exp_odg is None %}
+                  RAS
+                  {% else %}
+                  {{details_consultation.exp_odg}}
+                  {% endif %}
+                  </td>
+                  
+              </tr>
+            </tbody>
+          </table>
+          <br>
+    <div >
+    
+    <div>
+    
+    <table >
+    
+    <tbody>
+    <tr>
+    <td class="text-left" align="left" style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:15px;">
+      Hauteur P:
+    </td>
+    <td class="text-left" align="left" style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:15px;" width="30">
+      
+    OD:
+    </td>
+    <td class="text-left" align="left" style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:15px;" width="150">
+      {% if details_consultation.hp_od is None %}
+      RAS
+      {% else %}
+      {{details_consultation.hp_od}}
+      {% endif %}
+    </td>
+    <td class="text-left" align="left" style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:15px;" width="30">
+    OG:
+    </td>
+    <td class="text-left" align="left" style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:15px;" width="150">
+      {% if details_consultation.hp_og is None %}
+      RAS
+      {% else %}
+      {{details_consultation.hp_og}}
+      {% endif %}
+    </td>
+    </tr>
+    </tbody>
+    </table>
+    -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    
+    <br>
+          <div>
+            <div >
+              
+              <table >
+              
+                <tbody>
+                  <tr>
+                    <td class="text-left" align="left" style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:15px;color: black" width="110">
+                      Type de verre :
+                    </td>
+                    <td class="text-left" align="left" style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:15px">
+                      <span class="mono">
+                        {% if details_consultation.type_material == 'MINERAL_GLASS' %}
+                    Minéral
+                    {% elif details_consultation.type_material == 'ORGANIC_GLASS' %}
+            Organique
+            {% elif details_consultation.type_material == 'POLYCARBONATE_GLASS' %}
+            Polycarbonate
+            {% elif details_consultation.type_material == '[]' %}
+            RAS
+            {% else %}
+                    {{details_consultation.type_material}}
+                    {% endif %}
+                         </span>
+                    </td>
+                    <td class="text-left" align="center" style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:15px;color: black">
+                    </td>
+                    <td class="text-left" align="center"  style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:15px;color: black" width="50">
+                      <span class="mono">Foyer :</span>
+                    </td>
+                    <td class="text-left"  align="left" style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:15px;color: black" width="150">
+                      <span class="mono">
+                        {% if details_consultation.type_glass == 'SIMPLE_FOCUS' %}
+                  Simple foyer
+                  {% elif details_consultation.type_glass == 'BIFOCAL' %}
+            Double-foyer
+            {% elif details_consultation.type_glass == 'DECREASING_GLASS' %}
+            Verres Dégressifs
+            {% elif details_consultation.type_glass == 'PROGRESSIVE_LENSES' %}
+            Verres Progressifs
+            {% elif details_consultation.type_glass == '[]' %}
+            RAS
+            {% else %}
+            
+                    {{details_consultation.type_glass}}
+                    {% endif %}
+                        </span>
+                    </td>                
+                  </tr>
+          
+                                
+                </tbody>
+              </table>
+              <table >
+              
+                <tbody>
+                
+                  <tr>
+                    <td class="text-left" align="left" style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:15px;color: black" width="150">
+                      Traitements de verre :
+                      
+                    </td>
+                    <td class="text-left" align="left" style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:15px;color: black" width="400">
+                      <span class="mono">
+                        {% if details_consultation.glass_treatments|length == 0 %}
+                        
+            RAS
+            {% else %}
+            {% if details_consultation.glass_treatments|length > 1 %}
+                        {% for symptoms in details_consultation.glass_treatments %}
+                        {% if symptoms == 'ANTI_SCRATCH' %}
+                        Anti-rayures,
+                        {% elif symptoms == 'ANTI_GLARE' %}
+            Anti-reflets,
+            {% elif symptoms == 'DECREASING_GLASS' %}
+            Verres Dégressifs,
+            {% elif symptoms == 'PROGRESSIVE_LENSES' %}
+            Verres Progressifs,
+            {% elif symptoms == 'BLUE_LIGHT' %}
+            Anti-lumière bleue,
+            {% elif symptoms == 'SOLAR' %}
+            Solaires,
+            {% elif symptoms == 'PHOTOCHROMIC' %}
+            Photochromiques,
+            {% elif symptoms == 'POLARIZED' %}
+            Polarisés,
+            {% else %}
+                    {{symptoms}}
+                    {% endif %}
+                    
+                                {% endfor %}
+                                {% else %}
+                                {% for symptoms in details_consultation.glass_treatments %}
+                        {% if symptoms == 'ANTI_SCRATCH' %}
+                        Anti-rayures
+                        {% elif symptoms == 'ANTI_GLARE' %}
+            Anti-reflets
+            {% elif symptoms == 'DECREASING_GLASS' %}
+            Verres Dégressifs
+            {% elif symptoms == 'PROGRESSIVE_LENSES' %}
+            Verres Progressifs
+            {% elif symptoms == 'BLUE_LIGHT' %}
+            Anti-lumière bleue
+            {% elif symptoms == 'SOLAR' %}
+            Solaires
+            {% elif symptoms == 'PHOTOCHROMIC' %}
+            Photochromiques
+            {% elif symptoms == 'POLARIZED' %}
+            Polarisés
+            {% else %}
+                    {{symptoms}}
+                    {% endif %}
+                    
+                                {% endfor %}
+                                {% endif %}
+                                {% endif %}
+                        </span>
+                      
+                    </td>
+                    <td class="text-left" align="center" style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:15px;color: black">
+                    </td>
+                    
+                   
+                  </tr>
+                  
+                </tbody>
+              </table>
+    
+              <table >
+              
+                <tbody>
+                  <tr>
+                    <td class="text-left" align="left" style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:15px;color: black" width="50">
+                      <span class="mono">Teinte :</span>
+                    </td>
+                    <td class="text-left" align="left" style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:15px;color: black">
+                      <span class="mono">
+                        {% if details_consultation.hue == 'BROWN' %}
+                          Marron
+                          {% elif details_consultation.hue == 'BLUE' %}
+            Bleu
+            {% elif details_consultation.hue == 'YELLOW' %}
+            Jaune
+            {% elif details_consultation.hue == 'GRAY' %}
+            Gris
+            {% elif details_consultation.hue == 'GREEN' %}
+            Vert
+            {% elif details_consultation.hue == 'BLACK' %}
+            Noir
+            {% elif details_consultation.hue == 'RED' %}
+            Rouge
+            {% elif details_consultation.hue|length == 0 %}
+            RAS
+            {% else %}
+                        {{details_consultation.hue}}
+                        {% endif %}
+                      </span>
+                    </td>
+                    <td class="text-left" align="left" style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:15px;color: black" width="110">
+                      <span class="mono">Catégories teinte :</span>
+                      
+                    </td>
+                    <td class="text-left" align="left" style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:15px;color: black"  width="200">
+                      <span class="mono">
+                        {% if details_consultation.cat_hue == 'CAT0' %}
+                          Cat0: Verre Clair
+                          {% elif details_consultation.cat_hue == 'CAT1' %}
+            Cat1: Verre légerement coloré
+            {% elif details_consultation.cat_hue == 'CAT2' %}
+            Cat2: Verre a teinte moyenne
+            {% elif details_consultation.cat_hue == 'CAT3' %}
+            Cat3: Verre foncé
+            {% elif details_consultation.cat_hue == 'CAT4' %}
+            Cat4: Verre tres foncé
+            {% elif details_consultation.cat_hue == '[]' %}
+            RAS
+            {% else %}
+                          {{details_consultation.cat_hue}}
+                          {% endif %}
+                        </span>
+                      
+                    </td>
+                    
+                  </tr>
+                  
+                </tbody>
+              </table>
+            </div>
+          </div>
+    </tr>
+</div>
+<div id="footer_content">
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+  <table >
+    
+    <tbody>
+      <tr >
+            
+        </td> <td class="text-left" align="center" style="font-family:Verdana, Geneva, sans-serif; font-weight:400; font-size:13px;">
+          N.B.: Rapporter cette ordonnance a une nouvelle consultation
+        </td>
+        
+          
+      </tr>
+    </tbody>
+  </table>
+  <table >
+    
+    <tbody>
+      <tr>
+        <td class="text-left" align="center" style="font-family:Verdana, Geneva, sans-serif; font-weight:400; font-size:13px;" >
+          {{ hospital.zip_code }} - {{ hospital.address }} - Tel: {{ hospital.phone }}
+        </td>
+          
+      </tr>
+    </tbody>
+    <table >
+    
+      <tbody>
+        <tr>
+          <td class="text-left" align="center" style="font-family:Verdana, Geneva, sans-serif; font-weight:400; font-size:13px;" >
+            Email: {{ hospital.email }}
+          </td>
+            
+        </tr>
+      </tbody>
+  </table>
+</div>
+</body>
+
+<footer> 
+  
+  
+</footer>
+</html>

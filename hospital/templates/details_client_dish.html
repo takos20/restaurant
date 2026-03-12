@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load humanize %}
+{% load static %}
+<head>
+    <style type="text/css">
+        @page {
+            size: a4;
+            margin: 2mm;
+        }
+
+        .table {
+            border: 0.5px solid #ababab;
+            text-align: center;
+            table-layout: fixed;
+            margin-bottom: 5px;
+        }
+
+        .table tr td {
+            white-space: nowrap;
+        }
+
+        .table th {
+            padding: 5px;
+            vertical-align: top;
+            background-color: #e8e8e8;
+        }
+
+        .table td {
+            padding: 5px;
+            vertical-align: top;
+            -pdf-keep-with-next: false;
+            overflow: hidden;
+            text-overflow: ellipsis;
+
+
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="ui segment itemscard">
+  <div class="content">
+    <table >
+    
+      <tbody>
+        <tr>
+          <td class="text-left" align="center" style="font-family:Verdana, Geneva, sans-serif; font-weight:900; font-size:20px;color: black" width="190">
+            <img id="logo" style="border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 5px;
+    width: 300px;" src="/media/logo.png">
+          </td>
+          <td class="text-left" align="center" style="font-family:Verdana, Geneva, sans-serif; font-weight:500; font-size:15px">
+          </td>
+          <td class="text-left" align="center" style="font-family:Verdana, Geneva, sans-serif; font-weight:700; font-size:15px;color: black">
+          </td>
+          <td class="text-left" align="center" style="font-family:Verdana, Geneva, sans-serif; font-weight:500; font-size:15px;color: black">
+          </td>
+          <td class="text-left" align="center" style="font-family:Verdana, Geneva, sans-serif; font-weight:700; font-size:15px;color: black">
+          </td>
+          <td class="text-left" align="center" style="font-family:Verdana, Geneva, sans-serif; font-weight:500; font-size:15px;color: black" width="230">
+            <div><span class="mono">{{ hospital.name }}</span></div>
+            <div><span class="mono">{{ hospital.address }}</span></div>
+            <div><span class="mono">Tel: {{ hospital.phone }}</span></div>
+            <div><span class="mono">Email: {{ hospital.email }}</span></div>
+          </td>
+          
+        </tr>
+      </tbody>
+    </table>
+
+  </div>
+</div>
+<table>
+<tr>
+  <td style="font-family:Verdana, Geneva, sans-serif; font-weight:600; font-size:15px;" align="center" colspan="2">DETAILS VENTES</td>
+</tr>
+<tr>
+  <td style="font-family:Verdana, Geneva, sans-serif; font-weight:600; font-size:15px;" align="center" colspan="2">Client : {{ patient_name.patient__name }}</td>
+</tr>
+</table>
+<table class="table" style="margin-top: -25px;" width="100%" cellspacing="0" cellpadding="0">
+  
+    <thead >
+    <tr>
+        <th style="font-family:Verdana, Geneva, sans-serif; font-weight:600; font-size:15px;color: black" width="200">Designation</th>
+        <th style="font-family:Verdana, Geneva, sans-serif; font-weight:600; font-size:15px;color: black" width="200">Commandes</th>
+        <th style="font-family:Verdana, Geneva, sans-serif; font-weight:600; font-size:15px;color: black" width="200">Chiffre d'affaire</th>
+        <th style="font-family:Verdana, Geneva, sans-serif; font-weight:600; font-size:15px;color: black" width="200">Cout de revient</th>
+        <th style="font-family:Verdana, Geneva, sans-serif; font-weight:600; font-size:15px;color: black" width="200">Marges</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for ligne in lignes %}
+            <td class="td" style="font-family:Verdana, Geneva, sans-serif; font-weight:500; font-size:14px;color: black">{{ ligne.dish__name }}</td>
+            <td class="td" style="font-family:Verdana, Geneva, sans-serif; font-weight:500; font-size:14px;color: black">{{ ligne.total_quantity }}</td>
+            <td class="td" style="font-family:Verdana, Geneva, sans-serif; font-weight:500; font-size:14px;color: black">{{ ligne.total_amount_net|floatformat }}</td>
+            <td class="td" style="font-family:Verdana, Geneva, sans-serif; font-weight:500; font-size:14px;color: black">{{ ligne.total_cost_production|floatformat  }}</td>
+            <td class="td" style="font-family:Verdana, Geneva, sans-serif; font-weight:500; font-size:14px;color: black">{{ ligne.total_margin|floatformat }}</td>
+        </tr>
+{% endfor %}
+        <div class="ui segment itemscard">
+          <div class="content">
+            <table class="ui celled table">
+            
+              <tbody>
+                <tr>
+                  <td width="200" class="text-left" align="center" style="font-family:Verdana, Geneva, sans-serif; font-weight:700; font-size:15px;color: black; height: auto;" height="5">
+                    <div class="panel" style="height:50%;">
+                    Total commandes :
+                    </div>
+                  </td>
+                  <td class="text-left" align="center" style="font-family:Verdana, Geneva, sans-serif; font-weight:500; font-size:15px">
+                    <span class="mono">{{total_commandes}} </span>
+                  </td>
+                  <td width="200" class="text-left" align="center" style="font-family:Verdana, Geneva, sans-serif; font-weight:700; font-size:15px;color: black">
+                    <span class="mono">Total Chiffre d'affaire :</span>
+                  </td>
+                  <td class="text-left" align="center" style="font-family:Verdana, Geneva, sans-serif; font-weight:500; font-size:15px">
+                    <span class="mono">{{total_ca|floatformat}}</span>
+                  </td>
+                </tr>
+                
+              </tbody>
+            </table>
+        
+          </div>
+        </div>
+   
+    </tbody>
+</table>
+</div>
+</body>
+</html>

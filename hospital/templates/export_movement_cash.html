@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load humanize %}
+{% load static %}
+<head>
+    <style type="text/css">
+        @page{size: 76mm 297mm}
+
+        .col-md-10 .line {
+        padding-left : 8vw;
+        background-color:red;
+        height:2px;
+        width:30%;
+    }
+ .table th {
+            padding: 5px;
+            vertical-align: top;
+            background-color: #0a908f;
+        }
+ @frame footer_frame {           /* Another static Frame */
+        -pdf-frame-content: footer_content;
+        left: 230pt;
+        width: 512pt;
+        top: 820pt;
+        height: 20pt;
+    }
+    .note{
+        border:1px solid #000;
+        padding:4px;
+        font-size:11px;
+        margin-top:6px;
+    }
+
+    .footer{
+        margin-top:4px;
+        font-size:11px;
+        font-style: italic;
+    }
+    .center { text-align: center; }
+    </style>
+</head>
+
+<body>
+<table>
+
+    <div class="ui segment itemscard">
+        <div class="content">
+          <table >
+          <tr>
+
+
+                <td class="w580" align="center">
+                    <div style="font-family:Verdana, Geneva, sans-serif; font-weight:500; font-size:15px;" colspan="1"
+                         align="center">
+                         <img id="logo" style="border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 5px;
+    width: 100px;" src="/media/logo.png"></div>
+                         
+
+                </td>
+
+            </tr>
+            <tbody>
+              <tr>
+                
+                <td class="text-left" align="center" style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:18px;color: black" width="230">
+                  <div><span class="mono">{{ hospital.name }}</span></div>
+                  <div><span class="mono">{{ hospital.address }}</span></div>
+                  <div><span class="mono">Tel: {{ hospital.phone }}</span></div>
+                  <div><span class="mono">Email: {{ hospital.email }}</span></div>
+                </td>
+                
+              </tr>
+            </tbody>
+          </table>
+      
+        </div>
+      </div>
+      <br>
+    
+</table>
+<table>
+    <tr>
+        <td style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:17px;" colspan="2"
+            align="center">LISTE DES MOUVEMENTS DE CAISSE
+        </td>
+    </tr>
+</table>
+<table class="table">
+    <tr>
+        <td style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:15px;" colspan="2"
+            align="left">Montant total : {{ sum_total|intcomma }}</td>
+
+    </tr>
+    <thead>
+    <tr>
+        <th style="color: black">Code</th>
+        <th style="color: black">Type</th>
+        <th style="color: black">Motifs</th>
+        <th style="color: black">Valeur</th>
+        <th style="color: black">Date du mouvement</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for stock_movement in movements %}
+        <tr style="text-align: center">
+            <td class="td">{{ stock_movement.code }}</td>
+            <td class="td">
+                {% if stock_movement.type == 'EXIT' %}
+                Sortie
+                {% else %}
+                Entree
+                {% endif %}</td>
+            <td class="td">{{ stock_movement.motive }}</td>
+            <td class="td">{{ stock_movement.amount_movement }}</td>
+            <td class="td">{{ stock_movement.createdAt }} {{ stock_movement.timeAt }}</td>
+        </tr>
+
+    {% endfor %}
+    </tbody>
+</table>
+
+
+{#<td width="51%" valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">#}
+{#      <div style="text-align:right"><span style="font-family:Verdana, Geneva, sans-serif; font-weight:600; font-size:13px; border-top:1px solid #333; border-bottom:1px solid #333;">Montant total:</span> {{MontantT}} FCFA</div>#}
+{#   <div style="text-align:right"><span style="font-family:Verdana, Geneva, sans-serif; font-weight:600; font-size:13px; border-top:1px solid #333; border-bottom:1px solid #333;">Montant perçu:</span> {{Advance}} FCFA</div>#}
+{#   <div style="text-align:right"><span style="font-family:Verdana, Geneva, sans-serif; font-weight:600; font-size:13px; border-top:1px solid #333; border-bottom:1px solid #333;">Reste a payer:</span> {{Left_to_pay}} FCFA</div>#}
+{#   <div style="text-align:right"><span style="font-family:Verdana, Geneva, sans-serif; font-weight:600; font-size:13px; border-top:1px solid #333; border-bottom:1px solid #333;">Remboursement:</span> {{Repayment}} FCFA</div>#}
+{##}
+{#    </table></td>#}
+
+</body>
+
+</html>

@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load humanize %}
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <style>
+        @page {
+    size: A4;
+    margin: 0.5cm;
+}
+
+body {
+    counter-reset: page;
+}
+
+footer {
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+    font-size: 10px;
+    font-style: italic;
+}
+
+footer::after {
+    content: "Page " counter(page) " sur " counter(pages);
+}
+
+        body {
+            font-family: DejaVu Sans, sans-serif;
+            font-size: 12px;
+            line-height: 1.4;
+        }
+
+        .header, .footer {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .logo {
+            width: 160px;
+            height: auto;
+        }
+
+        .infos {
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th, td {
+            border: 1px solid #333;
+            padding: 6px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #eee;
+        }
+
+        .total {
+            font-weight: bold;
+            text-align: right;
+        }
+
+        .signature {
+            margin-top: 60px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .signature div {
+            width: 45%;
+            text-align: center;
+        }
+
+        .highlight {
+            background-color: #f9f9f9;
+            padding: 5px;
+            border: 1px solid #ccc;
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <div class="header">
+        {% if hospital.logo %}
+            <img src="{{ hospital.logo.url }}" class="logo" alt="Logo">
+        {% endif %}
+        <h2>{{ hospital.name }}</h2>
+        <p>{{ hospital.address }}<br>
+        Tél: {{ hospital.phone }} | Email: {{ hospital.email }}</p>
+        <hr>
+        <h3>PROFORMA / FACTURE DE SOINS</h3>
+        <p><strong>Date:</strong> {{ bills.createdAt|date:"d/m/Y" }}<br>
+           <strong>Proforma N°:</strong> {{ bills.code }}</p>
+    </div>
+
+    <div class="infos">
+        <p>
+            <strong>Patient :</strong> {{ bills.patient.name }} <br>
+           <strong>N° dossier :</strong> {{ bills.patient.code }}<br>
+           {% if bills.patient.insurance_agency %}
+            <tr>
+                <td colspan="2"><strong>Assurance :</strong> {{ bills.patient.insurance_agency.name }} ({{ bills.patient.insurance_agency.insurance.percent }}%)</td>
+            </tr>
+            <strong>N° contrat :</strong> {{ bills.patient.code }}<br>
+            {% endif %}
+        </p>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+        <th >Nom patient</th>
+        <th >Services</th>
+        <th >Mt. Total</th>
+        <!-- <th >% Assurance</th> -->
+        <th >Mt. Assurance</th>
+        <th >% Patient</th>
+        <th >Mt. Patient</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in products %}
+                <tr>
+                    
+                    <td>{{ item.bills.patient.name }}</td>
+                    <td>{% if item.details_stock %}
+                        {{ item.details_stock.product.name }},
+                            {% elif item.medical_act %}
+                            {{ item.medical_act.title }},
+                            {% elif item.laboratory %}
+                            {{ item.laboratory.title }},
+                            {% elif item.type_consultation %}
+                             {{ item.type_consultation.title }},
+                            {% elif item.checkup %}
+                             {{ item.checkup.title }},
+                            {% elif item.surgery %}
+                             {{ item.surgery.title }},
+                            {% elif item.diagnostic %}
+                             {{ item.diagnostic.title }},
+                            {% elif item.exam_investigation %}
+                                  {{ item.exam_investigation.title }},
+                            {% elif item.room %}
+                                  {{ item.room.name }},
+                            {% elif item.radiography %}
+                                    {{ item.radiography.title }},
+                               
+                            {% elif item.functional_exploration %}
+                                    {{ item.functional_exploration.title }}
+                                    {% endif %}
+        </td>
+                    <td>{{ item.amount_net|floatformat:0 }} FCFA</td>
+                    <!-- <td>{{ insurance_name.insurance_settlement.insurance.percent|floatformat:0 }}%</td> -->
+                    <td>{{ item.insurance|floatformat:0 }} FCFA</td>
+                    <td>{{ remaining_percent }}%</td>
+                    <td>{{ item.insurance_patient|floatformat:0 }}</td>
+                </tr>
+            {% empty %}
+                <tr><td colspan="5" style="text-align:center;">Aucune facture</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- <p class="total">Total brut : {{ total|floatformat:0 }} FCFA</p>
+    <p class="total">Assurance : {{ insurance|floatformat:0 }} FCFA</p>
+    <p class="total">Assure : {{ insurance_patient|floatformat:0 }} FCFA</p> -->
+
+    <!-- <div class="signature">
+        <div>
+            <p class="highlight">Le patient / Assuré</p>
+        </div>
+        <div>
+            <p class="highlight">Le Caissier : {{ Cashier }}</p>
+        </div>
+    </div> -->
+
+    <div class="footer">
+        <hr>
+        <small>Document généré automatiquement - {{ url }}</small><br>
+        <small>Page <pdf:pagenumber /> sur <pdf:pagecount /></small>
+    </div>
+
+</body>
+</html>

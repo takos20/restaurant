@@ -1,0 +1,780 @@
+[16:41, 12/07/2025] Dimitri NK92: <!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: DejaVu Sans, sans-serif;
+            font-size: 12px;
+            line-height: 1.4;
+        }
+
+        .header, .footer {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .logo {
+            width: 80px;
+            height: auto;
+        }
+
+        .infos {
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th, td {
+            border: 1px solid #333;
+            padding: 6px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #eee;
+        }
+
+        .total {
+            font-weight: bold;
+            text-align: right;
+        }
+
+        .signature {
+            margin-top: 60px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .signature div {
+            width: 45%;
+            text-align: center;
+        }
+
+        .highlight {
+            background-color: #f9f9f9;
+            padding: 5px;
+            border: 1px solid #ccc;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        {% if hospital.logo %}
+            <img src="{{ hospital.logo.url }}" class="logo" alt="Logo">
+        {% endif %}
+        <h2>{{ hospital.nom }}</h2>
+        <p>{{ hospital.adresse }}<br>
+        Tél: {{ hospital.telephone }} | Email: {{ hospital.email }}</p>
+        <hr>
+        <h3>PROFORMA / FACTURE DE SOINS</h3>
+        <p><strong>Date:</strong> {{ patient_settlement.date_creation|date:"d/m/Y" }}<br>
+           <strong>Proforma N°:</strong> {{ patient_settlement.code }}</p>
+    </div>
+
+    <div class="infos">
+        <p><strong>Patient :</strong> {{ patient_settlement.patient.nom }} {{ patient_settlement.patient.prenom }}<br>
+           <strong>N° dossier :</strong> {{ patient_settlement.patient.numero_dossier }}<br>
+           {% if patient_settlement.assurance %}
+               <strong>Assurance :</strong> {{ patient_settlement.assurance.nom }} ({{ patient_settlement.assurance.couverture }}%)
+           {% endif %}
+        </p>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Acte Médical</th>
+                <th>Quantité</th>
+                <th>Prix unitaire</th>
+                <th>Montant</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in patient_settlement.details.all %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ item.acte.nom }}</td>
+                    <td>{{ item.quantite }}</td>
+                    <td>{{ item.acte.tarif|floatformat:0 }} F</td>
+                    <td>{{ item.montant|floatformat:0 }} F</td>
+                </tr>
+            {% empty %}
+                <tr><td colspan="5" style="text-align:center;">Aucun acte médical</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <p class="total">Total brut : {{ patient_settlement.total|floatformat:0 }} F</p>
+    <p class="total">Dette antérieure : {{ dette|floatformat:0 }} F</p>
+    <p class="total">Reste dû (Total + Dette) : {{ reste|floatformat:0 }} F</p>
+
+    <div class="signature">
+        <div>
+            <p class="highlight">Le patient / Assuré</p>
+        </div>
+        <div>
+            <p class="highlight">Le Caissier : {{ Cashier }}</p>
+        </div>
+    </div>
+
+    <div class="footer">
+        <hr>
+        <small>Document généré automatiquement - {{ url }}</small>
+    </div>
+
+</body>
+</html>
+[16:46, 12/07/2025] Dimitri NK92: 
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        @page {
+            size: A4;
+            margin: 2cm;
+            @bottom-right {
+                content: "Page " counter(page) " sur " counter(pages);
+                font-size: 10px;
+                font-style: italic;
+            }
+        }
+
+        body {
+            font-family: DejaVu Sans, sans-serif;
+            font-size: 12px;
+            line-height: 1.4;
+        }
+
+        .header, .footer {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .logo {
+            width: 80px;
+            height: auto;
+        }
+
+        .infos {
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th, td {
+            border: 1px solid #333;
+            padding: 6px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #eee;
+        }
+
+        .total {
+            font-weight: bold;
+            text-align: right;
+        }
+
+        .signature {
+            margin-top: 60px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .signature div {
+            width: 45%;
+            text-align: center;
+        }
+
+        .highlight {
+            background-color: #f9f9f9;
+            padding: 5px;
+            border: 1px solid #ccc;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        {% if hospital.logo %}
+            <img src="{{ hospital.logo.url }}" class="logo" alt="Logo">
+        {% endif %}
+        <h2>{{ hospital.nom }}</h2>
+        <p>{{ hospital.adresse }}<br>
+        Tél: {{ hospital.telephone }} | Email: {{ hospital.email }}</p>
+        <hr>
+        <h3>PROFORMA / FACTURE DE SOINS</h3>
+        <p><strong>Date:</strong> {{ patient_settlement.date_creation|date:"d/m/Y" }}<br>
+           <strong>Proforma N°:</strong> {{ patient_settlement.code }}</p>
+    </div>
+
+    <div class="infos">
+        <p><strong>Patient :</strong> {{ patient_settlement.patient.nom }} {{ patient_settlement.patient.prenom }}<br>
+           <strong>N° dossier :</strong> {{ patient_settlement.patient.numero_dossier }}<br>
+           {% if patient_settlement.assurance %}
+               <strong>Assurance :</strong> {{ patient_settlement.assurance.nom }} ({{ patient_settlement.assurance.couverture }}%)
+           {% endif %}
+        </p>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Acte Médical</th>
+                <th>Quantité</th>
+                <th>Prix unitaire</th>
+                <th>Montant</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in patient_settlement.details.all %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ item.acte.nom }}</td>
+                    <td>{{ item.quantite }}</td>
+                    <td>{{ item.acte.tarif|floatformat:0 }} F</td>
+                    <td>{{ item.montant|floatformat:0 }} F</td>
+                </tr>
+            {% empty %}
+                <tr><td colspan="5" style="text-align:center;">Aucun acte médical</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <p class="total">Total brut : {{ patient_settlement.total|floatformat:0 }} F</p>
+    <p class="total">Dette antérieure : {{ dette|floatformat:0 }} F</p>
+    <p class="total">Reste dû (Total + Dette) : {{ reste|floatformat:0 }} F</p>
+
+    <div class="signature">
+        <div>
+            <p class="highlight">Le patient / Assuré</p>
+        </div>
+        <div>
+            <p class="highlight">Le Caissier : {{ Cashier }}</p>
+        </div>
+    </div>
+
+    <div class="footer">
+        <hr>
+        <small>Document généré automatiquement - {{ url }}</small><br>
+        <small>Page <pdf:pagenumber /> sur <pdf:pagecount /></small>
+    </div>
+
+</body>
+
+</html>
+[16:51, 12/07/2025] Dimitri NK92: 🔧 1. Ajouter un QR Code dans chaque proforma
+Étape A — Générer un QR Code dans la vue Django
+Utilisons qrcode (Python package). Installe-le si ce n’est pas déjà fait :
+
+pip install qrcode[pil]
+
+Génère le QR code comme une image base64 à injecter dans le template :
+import qrcode
+import base64
+from io import BytesIO
+
+def generate_qr_code_base64(data):
+    qr = qrcode.make(data)
+    buffer = BytesIO()
+    qr.save(buffer, format='PNG')
+    buffer.seek(0)
+    image_png = buffer.getvalue()
+    base64_image = base64.b64encode(image_png).decode('utf-8')
+    return f'data:image/png;base64,{base64_image}'
+
+Exemple d’intégration dans ta vue PDF :
+
+qr_data = f"{request.build_absolute_uri('/verify/')}{patient_settlement.code}/"
+qr_code = generate_qr_code_base64(qr_data)…
+[16:53, 12/07/2025] Dimitri NK92: 2. Générer plusieurs proformas dans un seul PDF
+xhtml2pdf ne gère qu’un seul document HTML à la fois. Donc il faut :
+
+Générer les HTML des différentes proformas
+
+Les fusionner dans un seul HTML
+
+L’envoyer à pisa.pisaDocument()
+
+Exemple Vue Django : génération groupée
+
+from django.template.loader import get_template
+from django.http import HttpResponse
+from xhtml2pdf import pisa
+from io import BytesIO
+from .utils import generate_qr_code_base64  # Comme vu plus haut
+
+def generate_bulk_proforma_pdf(request, settlements):
+    template = get_template('patient_settlement.html')
+    html_list = []
+
+    for settlement in settlements:
+        qr_data = f"{request.build_absolute_uri('/verify/')}{settlement.code}/"
+        qr_code = generate_qr_code_base64(qr_data)
+
+        html_content = template.render({
+            'patient_settlement': settlement,
+            'dette': 0,  # ou autre logique
+            'reste': settlement.total,
+            'hospital': settlement.hospital,
+            'Cashier': request.user.username,
+            'url': request.build_absolute_uri('/'),
+            'qr_code': qr_code,
+        })
+        html_list.append(html_content)
+        html_list.append('<div style="page-break-after:always;"></div>')  # saut de page
+
+    final_html = ''.join(html_list)
+    result = BytesIO()
+    pisa_status = pisa.pisaDocument(BytesIO(final_html.encode('utf-8')), dest=result)
+
+    if not pisa_status.err:
+        response = HttpResponse(result.getvalue(), content_type='application/pdf')
+        response['Content-Disposition'] = 'inline; filename="proformas_groupées.pdf"'
+        return response
+    else:
+        return HttpResponse("Erreur lors de la génération PDF groupée", status=500)
+
+Exemple d’appel
+Dans une vue :
+
+from .models import Proforma
+
+def bulk_pdf_view(request):
+    settlements = Proforma.objects.filter(date_creation__month=7)[:10]  # ou autre filtre
+    return generate_bulk_proforma_pdf(request, settlements)
+[17:00, 12/07/2025] Dimitri NK92: un bouton dans l’admin Django pour "Exporter toutes les proformas du mois"
+
+
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        @page {
+            size: A4;
+            margin: 2.5cm 2cm 2cm 2cm;
+            @bottom-right {
+                content: "Page " counter(page) " / " counter(pages);
+                font-size: 10px;
+                color: #555;
+            }
+        }
+
+        body {
+            font-family: DejaVu Sans, sans-serif;
+            font-size: 12px;
+            color: #333;
+        }
+
+        h1, h2, h3 {
+            margin: 0;
+            padding: 0;
+        }
+
+        .header {
+            text-align: center;
+            border-bottom: 1px solid #aaa;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+        }
+
+        .logo {
+            width: 80px;
+            height: auto;
+            margin-bottom: 5px;
+        }
+
+        .hospital-info {
+            font-size: 12px;
+        }
+
+        .section {
+            margin-bottom: 25px;
+        }
+
+        .section-title {
+            font-weight: bold;
+            margin-bottom: 8px;
+            font-size: 13px;
+            color: #2c3e50;
+        }
+
+        .info-table, .details-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        .info-table td {
+            padding: 4px 6px;
+        }
+
+        .details-table th, .details-table td {
+            border: 1px solid #999;
+            padding: 6px;
+            font-size: 11px;
+        }
+
+        .details-table th {
+            background-color: #f2f2f2;
+            text-align: left;
+        }
+
+        .total {
+            text-align: right;
+            margin-top: 10px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .qr-code {
+            text-align: right;
+            margin-top: 10px;
+        }
+
+        .signature {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 60px;
+        }
+
+        .signature div {
+            width: 45%;
+            text-align: center;
+            font-size: 12px;
+        }
+
+        .footer {
+            text-align: center;
+            font-size: 10px;
+            margin-top: 40px;
+            color: #666;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        {% if hospital.logo %}
+            <img src="{{ hospital.logo.url }}" class="logo" alt="Logo">
+        {% endif %}
+        <h2>{{ hospital.nom }}</h2>
+        <p class="hospital-info">{{ hospital.adresse }} | Tél: {{ hospital.telephone }} | Email: {{ hospital.email }}</p>
+        <h3>FACTURE PROFORMA DE SOINS</h3>
+    </div>
+
+    <div class="section">
+        <table class="info-table">
+            <tr>
+                <td><strong>Date :</strong> {{ patient_settlement.date_creation|date:"d/m/Y" }}</td>
+                <td><strong>Proforma N° :</strong> {{ patient_settlement.code }}</td>
+            </tr>
+            <tr>
+                <td><strong>Patient :</strong> {{ patient_settlement.patient.nom }} {{ patient_settlement.patient.prenom }}</td>
+                <td><strong>N° dossier :</strong> {{ patient_settlement.patient.numero_dossier }}</td>
+            </tr>
+            {% if patient_settlement.assurance %}
+            <tr>
+                <td colspan="2"><strong>Assurance :</strong> {{ patient_settlement.assurance.nom }} ({{ patient_settlement.assurance.couverture }}%)</td>
+            </tr>
+            {% endif %}
+        </table>
+    </div>
+
+    <div class="section">
+        <div class="section-title">Détail des actes médicaux</div>
+        <table class="details-table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Acte Médical</th>
+                    <th>Quantité</th>
+                    <th>Prix unitaire</th>
+                    <th>Montant</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in patient_settlement.details.all %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ item.acte.nom }}</td>
+                    <td>{{ item.quantite }}</td>
+                    <td>{{ item.acte.tarif|floatformat:0 }} F</td>
+                    <td>{{ item.montant|floatformat:0 }} F</td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="5" style="text-align:center;">Aucun acte médical trouvé.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="section">
+        <div class="total">Total brut : {{ patient_settlement.total|floatformat:0 }} F</div>
+        <div class="total">Dette antérieure : {{ dette|floatformat:0 }} F</div>
+        <div class="total">Reste dû (Total + Dette) : {{ reste|floatformat:0 }} F</div>
+    </div>
+
+    {% if qr_code %}
+    <div class="qr-code">
+        <p><strong>Scan pour vérifier :</strong></p>
+        <img src="{{ qr_code }}" alt="QR Code" width="100">
+    </div>
+    {% endif %}
+
+    <div class="signature">
+        <div>
+            <p>Le patient / Assuré</p>
+            <br><br><br>............................
+        </div>
+        <div>
+            <p>Le Caissier : {{ Cashier }}</p>
+            <br><br><br>............................
+        </div>
+    </div>
+
+    <div class="footer">
+        <hr>
+        <p>Document généré automatiquement — {{ url }}</p>
+        <p><pdf:pagenumber /> / <pdf:pagecount /></p>
+    </div>
+
+</body>
+</html>
+
+
+
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        @page {
+            size: A4;
+            margin: 2.5cm 2cm 2cm 2cm;
+            @bottom-right {
+                content: "Page " counter(page) " / " counter(pages);
+                font-size: 10px;
+                color: #555;
+            }
+        }
+
+        body {
+            font-family: DejaVu Sans, sans-serif;
+            font-size: 12px;
+            color: #333;
+        }
+
+        h1, h2, h3 {
+            margin: 0;
+            padding: 0;
+        }
+
+        .header {
+            text-align: center;
+            border-bottom: 1px solid #aaa;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+        }
+
+        .logo {
+            width: 80px;
+            height: auto;
+            margin-bottom: 5px;
+        }
+
+        .hospital-info {
+            font-size: 11px;
+            color: #333;
+            line-height: 1.4;
+        }
+
+        .icon {
+            width: 12px;
+            height: 12px;
+            vertical-align: middle;
+            margin-right: 4px;
+        }
+
+        .title-blue {
+            color: #0057A3;
+            font-weight: bold;
+        }
+
+        .section {
+            margin-bottom: 25px;
+        }
+
+        .section-title {
+            font-weight: bold;
+            margin-bottom: 8px;
+            font-size: 13px;
+            color: #0057A3;
+        }
+
+        .info-table, .details-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        .info-table td {
+            padding: 4px 6px;
+        }
+
+        .details-table th, .details-table td {
+            border: 1px solid #999;
+            padding: 6px;
+            font-size: 11px;
+        }
+
+        .details-table th {
+            background-color: #eaf1f9;
+            text-align: left;
+            color: #0057A3;
+        }
+
+        .total {
+            text-align: right;
+            margin-top: 10px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .qr-code {
+            text-align: right;
+            margin-top: 10px;
+        }
+
+        .signature {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 60px;
+        }
+
+        .signature div {
+            width: 45%;
+            text-align: center;
+            font-size: 12px;
+        }
+
+        .footer {
+            text-align: center;
+            font-size: 10px;
+            margin-top: 40px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        {% if hospital.logo %}
+            <img src="{{ hospital.logo.url }}" class="logo" alt="Logo">
+        {% endif %}
+        <h2 class="title-blue">{{ hospital.nom }}</h2>
+        <p class="hospital-info">
+            🏥 {{ hospital.adresse }}<br>
+            📞 {{ hospital.telephone }} | ✉️ {{ hospital.email }}
+        </p>
+        <h3 class="title-blue">FACTURE PROFORMA DE SOINS</h3>
+    </div>
+
+    <div class="section">
+        <table class="info-table">
+            <tr>
+                <td><strong>Date :</strong> {{ patient_settlement.date_creation|date:"d/m/Y" }}</td>
+                <td><strong>Proforma N° :</strong> {{ patient_settlement.code }}</td>
+            </tr>
+            <tr>
+                <td><strong>Patient :</strong> {{ patient_settlement.patient.nom }} {{ patient_settlement.patient.prenom }}</td>
+                <td><strong>N° dossier :</strong> {{ patient_settlement.patient.numero_dossier }}</td>
+            </tr>
+            {% if patient_settlement.assurance %}
+            <tr>
+                <td colspan="2"><strong>Assurance :</strong> {{ patient_settlement.assurance.nom }} ({{ patient_settlement.assurance.couverture }}%)</td>
+            </tr>
+            {% endif %}
+        </table>
+    </div>
+
+    <div class="section">
+        <div class="section-title">Détail des actes médicaux</div>
+        <table class="details-table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Acte Médical</th>
+                    <th>Quantité</th>
+                    <th>Prix unitaire</th>
+                    <th>Montant</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in patient_settlement.details.all %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ item.acte.nom }}</td>
+                    <td>{{ item.quantite }}</td>
+                    <td>{{ item.acte.tarif|floatformat:0 }} F</td>
+                    <td>{{ item.montant|floatformat:0 }} F</td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="5" style="text-align:center;">Aucun acte médical trouvé.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="section">
+        <div class="total">Total brut : {{ patient_settlement.total|floatformat:0 }} F</div>
+        <div class="total">Dette antérieure : {{ dette|floatformat:0 }} F</div>
+        <div class="total">Reste dû (Total + Dette) : {{ reste|floatformat:0 }} F</div>
+    </div>
+
+    {% if qr_code %}
+    <div class="qr-code">
+        <p><strong>Scan pour vérifier :</strong></p>
+        <img src="{{ qr_code }}" alt="QR Code" width="100">
+    </div>
+    {% endif %}
+
+    <div class="signature">
+        <div>
+            <p>Le patient / Assuré</p>
+            <br><br><br>............................
+        </div>
+        <div>
+            <p>Le Caissier : {{ Cashier }}</p>
+            <br><br><br>............................
+        </div>
+    </div>
+
+    <div class="footer">
+        <hr>
+        <p>Document généré automatiquement — {{ url }}</p>
+        <p><pdf:pagenumber /> / <pdf:pagecount /></p>
+    </div>
+
+</body>
+</html>

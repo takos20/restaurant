@@ -1,0 +1,1 @@
+.fade-transition-enter-active,.fade-transition-leave-active{transition:opacity .3s ease}.fade-transition-enter,.fade-transition-leave-to{opacity:0}.summary-card{transition:box-shadow .3s ease;height:80px}.summary-card:hover{box-shadow:0 6px 16px rgba(0,0,0,.1)}.divider{margin-top:-10px;margin-bottom:-10px}

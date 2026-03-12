@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+<style>@page{size: 76mm 297mm}
+.col-md-10 .line {
+        padding-left : 8vw;
+        background-color:red;
+        height:2px;
+        width:30%;
+    }
+ .table th {
+            padding: 5px;
+            vertical-align: top;
+            background-color: #0a908f;
+        }
+        
+ @frame footer_frame {           /* Another static Frame */
+        -pdf-frame-content: footer_content;
+        left: 230pt;
+        width: 512pt;
+        top: 820pt;
+        height: 20pt;
+    }
+</style>
+</head>
+<body>
+    <tr>
+    <td class="w640">
+{#----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------#}
+        <table class="w640" cellpadding="0" cellspacing="0" border="0">
+            <tbody>
+                <tr>
+
+
+                <td class="w580" align="center">
+                    <div style="font-family:Verdana, Geneva, sans-serif; font-weight:500; font-size:15px;" colspan="1"
+                         align="center">
+                         <img id="logo" style="border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 5px;
+    width: 100px;" src="/media/logo.png"></div>
+                         
+
+                </td>
+
+            </tr>
+            <tr>
+
+
+                <td class="w580" align="left">
+                    <div style="font-family:Verdana, Geneva, sans-serif; font-weight:500; font-size:15px;" colspan="1"
+                         align="center"> {{ hospital.name }}</div>
+                         <div style="font-family:Verdana, Geneva, sans-serif; font-weight:500; font-size:13px;" colspan="2"
+                         align="center"> {{ hospital.phone }} | {{ hospital.email }}</div>
+
+                </td>
+
+            </tr>
+            <tr>
+                <td class="w580" align="left">
+                    <div style="font-family:Verdana, Geneva, sans-serif; font-weight:500; font-size:12px;" colspan="2"
+                         align="center"> Le {{ products.createdAt }} à {{ products.timeAt }}</div>
+                
+                         <div style="font-family:Verdana, Geneva, sans-serif; font-weight:500; font-size:12px;" colspan="2"
+                         align="center"> Mouvement N°: {{ products.code }}</div>
+               
+               
+                    <div style="font-family:Verdana, Geneva, sans-serif; font-weight:500; font-size:12px;" colspan="2"
+                         align="center">Caissier : {{ Cashier }}</div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </td>
+</tr>
+
+<div>
+    ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+    <table class="table" cellpadding="0" cellspacing="0" border="0" style="border-spacing:0;border-collapse: collapse;padding-left: 25px !important;">
+            <tbody>
+            <tr>
+                <td class="w580" align="left" width="50">
+                    <div style="font-family:Verdana, Geneva, sans-serif; font-weight:500; font-size:13px "
+                         align="right" > Motif</div>
+                </td>
+                <td class="w580" align="left" width="70">
+                    <div style="font-family:Verdana, Geneva, sans-serif; font-weight:500; font-size:13px;" 
+                         align="right" >Mouvement</div>
+                </td>
+                <td class="w580" align="left" width="35">
+                    <div style="font-family:Verdana, Geneva, sans-serif; font-weight:500; font-size:13px;" 
+                         align="right">Type</div>
+                </td>
+                <td class="w580" align="left" width="50">
+                    <div style="font-family:Verdana, Geneva, sans-serif; font-weight:500; font-size:13px;" 
+                         align="center">Montant</div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+</div>
+<table style="margin-top: -25px;">
+    <tr>
+        <td >
+            <table>
+                <tbody>
+                    <tr style="text-align: center;height: 50px">
+
+                    <td style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:12px"
+                        align="right" width="60">{{ products.motive }}</td>
+                    <td style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:12px;"
+                        height="50" align="right"  width="50">{{ products.expenses_nature.name }}</td>
+
+                    <td style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:12px;"
+                        height="50" align="right" width="50">
+                        {% if products.type == 'EXIT' %}
+                        Sortie
+                        {% elif products.type == 'ENTRY' %}
+                        Entrée
+                        {% endif %}
+                        </td>
+
+                    <td style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:12px;"
+                        height="50" align="center"  width="50">{{ products.amount_movement }}</td>
+                </tr>
+                
+                </tbody>
+                
+            </table>
+        </td>
+    </tr>
+</table>
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+<tr style="margin-top: -25px;">
+    <td class="w640">
+        <table class="w640" cellpadding="0" cellspacing="0" border="0">
+            <tbody>
+            <tr>
+
+                <td class="w580" align="left">
+                    <div style="font-family:Verdana, Geneva, sans-serif; font-weight:500; font-size:13px;" colspan="2"
+                         align="center"> {{ hospital.slogan }}</div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </td>
+</tr>
+
+</body>
+
+</html>

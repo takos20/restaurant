@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+<meta charset="utf-8">
+
+<style>
+   @page {
+        size: 215pt 1000pt;
+        margin: 5pt;
+    }
+
+    body{
+        font-family: "Courier New";
+        font-size: 10pt;
+    }
+
+    .center { text-align: center; }
+    .left { text-align: left; }
+    .right { text-align: right; }
+
+    .logo{
+        width:60px;
+        margin: 0 auto 5px auto;
+        display:block;
+    }
+
+    .title{
+        font-weight: bold;
+        font-size:14px;
+        letter-spacing:1px;
+    }
+
+    .separator{
+        border-top: 1px dashed #000;
+        margin:6px 0;
+    }
+
+    table{
+        width:100%;
+        border-collapse: collapse;
+    }
+
+    td{
+        padding:2px 0;
+        vertical-align: top;
+    }
+
+    .item-name{
+        width:70%;
+    }
+
+    .item-qty{
+        width:10%;
+        text-align:left;
+    }
+
+    .item-price{
+        width:20%;
+        text-align:right;
+    }
+
+    .totals td{
+        padding-top:3px;
+        font-weight:bold;
+    }
+
+    .note{
+        border:1px solid #000;
+        padding:4px;
+        font-size:11px;
+        margin-top:6px;
+    }
+
+    .footer{
+        margin-top:4px;
+        font-size:11px;
+        font-style: italic;
+    }
+</style>
+</head>
+
+<body>
+
+    <!-- Header -->
+    <div class="center">
+        <img src="{% static 'img/logo.png' %}" class="logo">
+        <div class="title">{{ hospital.name }}</div>
+    </div>
+
+    <div class="separator"></div>
+
+    <!-- Ticket Info -->
+    <table>
+        <tr>
+            <td class="left">Le {{ bills.createdAt|date:'Y-m-d' }} à {{ bills.timeAt }}</td>
+        </tr>
+        <tr>
+            <td>Nom du client : <strong>{{ bills.patient.name|default:"CLIENTS DIVERS" }}</strong></td>
+        </tr>
+        <tr>
+            <td>Ticket N° : <strong>{{ bills.code }}</strong></td>
+        </tr>
+        <tr>
+            <td>Caisse : <strong>{{ bills.cash_register.name }}</strong></td>
+        </tr>
+        <tr>
+            <td>Caissier : <strong>{{ Cashier }}</strong></td>
+        </tr>
+        <!-- <tr>
+            <td>Vendeur : <strong>{{ invoice.seller.get_full_name }}</strong></td>
+        </tr> -->
+    </table>
+
+    <div class="separator"></div>
+
+    <!-- Items -->
+    <table>
+        {% for line in products %}
+        <tr>
+            <td class="item-qty">{{ line.quantity_served }}</td>
+            <td class="item-name">
+                {{ line.dish.name }}<br>
+                <!-- <small>{{ line.description }}</small> -->
+            </td>
+            <td class="item-price">{{ line.amount_net|floatformat:0 }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <div class="separator"></div>
+
+    <!-- Totals -->
+    <table class="totals">
+        <tr>
+            <td class="left">Total</td>
+            <td class="right">{{ bills.net_payable|floatformat:0 }} FCFA</td>
+        </tr>
+        <tr>
+            <td class="left">Recu</td>
+            <td class="right">{{ bills.amount_received|floatformat:0 }} FCFA</td>
+        </tr>
+        <tr>
+            <td class="left">Règlement</td>
+            <td class="right">{{ bills.amount_paid|floatformat:0 }} FCFA</td>
+        </tr>
+        <tr>
+            <td class="left">Rendu</td>
+            <td class="right">{{ bills.refund|floatformat:0 }} FCFA</td>
+        </tr>
+    </table>
+
+    <!-- Note -->
+    <div class="note center">
+        NB: Les marchandises vendues ne seront<br>
+        remboursables, ni échangeables.<br>
+        Merci et à bientôt !
+    </div>
+
+    <div class="footer center">
+        MATRIX ERP 2.0
+    </div>
+
+</body>
+</html>

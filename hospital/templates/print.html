@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="fr">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <title>Ticket de Caisse</title>
+    <style>
+        @page {
+            size: 76mm 297mm;
+            margin: 3mm 2mm;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            margin: 0;
+            padding: 5px;
+            font-size: 10px;
+            color: #333;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 12px;
+            padding-bottom: 10px;
+            border-bottom: 1px dashed #999;
+        }
+
+        .logo {
+            width: 70px;
+            height: 70px;
+            border: 1px solid #ddd;
+            padding: 3px;
+            margin-bottom: 8px;
+        }
+
+        .business-name {
+    font-weight: bold;
+    font-size: 13px;
+}
+
+.receipt-info,
+.receipt-number {
+    font-size: 12px;
+}
+        /* .receipt-number {
+            font-size: 15px;
+            font-weight: bold;
+            color: #0a908f;
+            margin: 5px 0;
+        } */
+
+        /* Info Box */
+        .info-box {
+            background-color: #f5f5f5;
+            padding: 2px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            text-align: center;
+            
+        }
+
+        .info-row {
+            margin: 3px 0;
+            font-size: 9px;
+        }
+
+        .info-label {
+            color: #666;
+            font-weight: bold;
+        }
+
+        .info-value {
+            color: #000;
+        }
+
+        /* Products Table */
+        .products-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 10px 0;
+        }
+
+        .products-table thead {
+            background-color: #0a908f;
+            color: black;
+        }
+
+        .products-table th {
+            padding: 2px 0px;
+            font-size: 11px;
+            text-align: center;
+            font-weight: bold;
+            line-height: 10px;
+        }
+
+        .products-table th:first-child {
+            text-align: left;
+            padding-left: 5px;
+        }
+
+        .products-table td {
+            padding: 1px 2px;
+            font-size: 9px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .products-table td:first-child {
+            text-align: left;
+            padding-left: 5px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .products-table td:nth-child(2),
+        .products-table td:nth-child(3),
+        .products-table td:nth-child(4) {
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .products-table tr:last-child td {
+            border-bottom: 2px solid;
+        }
+
+        /* Discount Row */
+        .discount-row {
+            background-color: #fff9e6;
+            border: 1px dashed #ffc107;
+        }
+
+        .discount-row td {
+            color: #d84315;
+            font-weight: bold;
+        }
+
+        .discount-row td:first-child {
+            color: #f57c00;
+        }
+
+        /* Totals Box */
+        .totals-box {
+            background-color: #f8f8f8;
+            border: 1px solid #ddd;
+            padding: 8px;
+            margin: 10px 0;
+        }
+
+        .total-row {
+            margin: 4px 0;
+            font-size: 10px;
+        }
+
+        .total-row table {
+            width: 100%;
+        }
+
+        .total-row td {
+            padding: 3px 0;
+        }
+
+        .total-label {
+            color: #666;
+            font-weight: bold;
+            width: 50%;
+            font-size: 15px;
+        }
+
+        .total-value {
+            color: #000;
+            font-weight: bold;
+            text-align: right;
+            width: 50%;
+            font-size: 15px;
+        }
+
+        .grand-total {
+            border-top: 2px solid #0a908f;
+            margin-top: 5px;
+            padding-top: 5px;
+        }
+
+        .grand-total .total-label,
+        .grand-total .total-value {
+            font-size: 15px;
+            color: #0a908f;
+        }
+
+        /* Payment Grid */
+        .payment-grid {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 10px 0;
+        }
+
+        /* .payment-cell {
+            width: 50%;
+            padding: 6px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            vertical-align: top;
+        } */
+
+.payment-cell {
+    width: 50%;
+    padding: 2px;      /* ↓ réduit de 6px à 2px */
+    border: 1px solid #ddd;
+    background-color: #fff;
+    font-size: 15px;    /* ↓ réduit taille texte */
+    line-height: 12px; 
+    text-align: center; /* contrôle hauteur ligne */
+}
+
+.label {
+    font-weight: bold;
+}
+        .payment-label {
+            font-weight: bold;
+        }
+
+        .payment-value {
+            font-size: 13px;
+            font-weight: bold;
+            color: #000;
+            margin-top: -15px;
+        }
+
+        /* Prepaid Section */
+        .prepaid-box {
+            background-color: #e3f2fd;
+            border: 2px solid #2196f3;
+            padding: 8px;
+            margin: 10px 0;
+        }
+
+        .prepaid-header {
+            text-align: center;
+            font-size: 10px;
+            font-weight: bold;
+            color: #1976d2;
+            padding: 1px;
+            margin-bottom: 8px;
+        }
+
+        .prepaid-table {
+            width: 100%;
+        }
+
+        .prepaid-table td {
+            padding: 1px 0;
+            font-size: 9px;
+        }
+
+        .prepaid-label {
+            color: #1565c0;
+            font-weight: bold;
+            width: 55%;
+        }
+
+        .prepaid-value {
+            color: #0d47a1;
+            font-weight: bold;
+            text-align: right;
+            width: 45%;
+        }
+
+        .balance-row {
+            border-top: 2px solid #2196f3;
+            padding-top: 5px;
+        }
+
+        .balance-row .prepaid-value {
+            font-size: 11px;
+            color: #1976d2;
+        }
+
+        /* Alert Box */
+        .alert-box {
+            background-color: #fff3e0;
+            border: 1px solid #ffb74d;
+            border-left: 4px solid #ff9800;
+            padding: 2px;
+            margin: 10px 0;
+            font-size: 9px;
+        }
+
+        .alert-text {
+            color: #e65100;
+            font-weight: bold;
+            margin-bottom: 2px;
+            
+        }
+
+        .balance-info {
+            color: #f57c00;
+            font-size: 8px;
+        }
+
+        /* Note Section */
+        .note-box {
+            border: 1px dashed #999;
+            padding: 8px;
+            margin: 10px 0;
+            text-align: center;
+        }
+
+        .note-title {
+            font-size: 9px;
+            font-weight: bold;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .note-text {
+            font-size: 8px;
+            color: #777;
+            line-height: 1.4;
+        }
+
+        /* Thank You */
+        .thank-you {
+            text-align: center;
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #0a908f;
+            color: white;
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            margin-top: 15px;
+            padding-top: 8px;
+            border-top: 1px solid #ddd;
+            font-size: 8px;
+            color: #999;
+            font-style: italic;
+        }
+
+        /* Separator */
+        .separator {
+            border: 0;
+            border-top: 1px dashed #999;
+            margin: 10px 0;
+        }
+
+        /* Helper classes */
+        .text-center {
+            text-align: center;
+            font-size: 29px;
+        }
+
+        .text-right {
+            text-align: right;
+        }
+
+        .text-left {
+            text-align: left;
+        }
+
+        .bold {
+            font-weight: bold;
+        }
+
+        .mb-5 {
+            margin-bottom: 5px;
+        }
+
+        .mb-10 {
+            margin-bottom: 10px;
+        }
+
+        .mt-5 {
+            margin-top: 5px;
+        }
+
+        .mt-10 {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+      <img class="logo" src="/media/logo.png" alt="Logo" width="70"><br>
+        <span class="business-name">{{ hospital.name }}</span><br>
+    <span class="receipt-info">
+        {{ bills.createdAt|date:"d/m/Y" }} à {{ bills.timeAt }}
+    </span><br>
+    <span class="receipt-number">
+        Ticket N° {{ bills.code }}
+    </span>
+    </div>
+
+    <!-- Customer & Cashier Info -->
+     <div class="info-box">
+        <div class="info-row">
+            <table>
+                <tr>
+                    <td class="info-label">Client : {{ bills.patient.name|default:"CLIENT DIVERS" }}</td>
+                    <td class="info-label">Caissier : {{ Cashier }}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <!-- <div class="info-box">
+        <div class="info-row">
+            <span class="info-label">Client :</span>
+            <span class="info-value">{{ bills.patient.name|default:"CLIENT DIVERS" }}</span>
+        </div>
+        <div class="info-row">
+            <span class="info-label">Caissier :</span>
+            <span class="info-value">{{ Cashier }}</span>
+        </div>
+    </div> -->
+
+    <!-- Products Table -->
+    <table class="products-table">
+        <thead>
+            <tr>
+                <th style="width: 40%;">Article</th>
+                <th style="width: 15%;">Qté</th>
+                <th style="width: 22%;">P.U.</th>
+                <th style="width: 23%;">Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for product in products %}
+            <tr>
+                <td>{{ product.dish.name_language.0.name }}</td>
+                <td class="text-center">{{ product.quantity_served }}</td>
+                <td class="text-center">{{ product.pun|floatformat:0 }}</td>
+                <td class="text-center bold">{{ product.amount_net|floatformat:0 }}</td>
+            </tr>
+            {% endfor %}
+
+            <!-- Loyalty Discount -->
+            {% for product in products %}
+            {% if product.delivery == 50 %}
+            <tr class="discount-row">
+                <td>Remise Fidélité</td>
+                <td class="text-center">-</td>
+                <td class="text-center">-</td>
+                <td class="text-center">-{{ product.amount_net|floatformat:0 }}</td>
+            </tr>
+            {% endif %}
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- <hr class="separator"> -->
+
+    <!-- Totals -->
+    <div class="totals-box">
+        <!-- <div class="total-row">
+            <table>
+                <tr>
+                    <td class="total-label">Sous-total : </td>
+                    <td class="total-value">{{ bills.net_payable|floatformat:0 }} FCFA</td>
+                </tr>
+            </table>
+        </div> -->
+        <div class="total-row grand-total">
+            <table>
+                <tr>
+                    <td class="total-label">TOTAL À PAYER :</td>
+                    <td class="total-value">{{ bills.net_payable|floatformat:0 }} FCFA</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <!-- Payment Details -->
+    <table class="payment-grid">
+        <tr>
+            <td class="payment-cell">
+                <div class="payment-label">Montant Payé</div>
+                <div class="payment-value">{{ bills.amount_paid|floatformat:0 }} FCFA</div>
+            </td>
+            <td class="payment-cell">
+                <div class="payment-label">Montant Reçu</div>
+                <div class="payment-value">{{ bills.amount_received|floatformat:0 }} FCFA</div>
+            </td>
+        </tr>
+        <tr>
+            <td class="payment-cell">
+                <div class="payment-label">À Rendre</div>
+                <div class="payment-value">{{ bills.refund|floatformat:0 }} FCFA</div>
+            </td>
+            <td class="payment-cell">
+                <div class="payment-label">Reste à Payer</div>
+                <div class="payment-value">{{ bills.balance|floatformat:0|default:"0" }} FCFA</div>
+            </td>
+        </tr>
+    </table>
+
+    <!-- Prepaid Account (if used) -->
+    {% if bills.amount_prepaid > 0 %}
+    <div class="prepaid-box">
+        <div class="prepaid-header">COMPTE PRÉPAYÉ</div>
+        <table class="prepaid-table">
+            <tr>
+                <td class="prepaid-label">Montant déduit :</td>
+                <td class="prepaid-value">{{ bills.amount_prepaid|floatformat:0 }} FCFA</td>
+            </tr>
+            {% if bills.overpayment_action == 'PREPAID' %}
+            <tr>
+                <td class="prepaid-label">Montant crédité :</td>
+                <td class="prepaid-value">+{{ bills.refund|floatformat:0 }} FCFA</td>
+            </tr>
+            {% endif %}
+            <tr class="balance-row">
+                <td class="prepaid-label">Nouveau Solde :</td>
+                <td class="prepaid-value">{{ amount_prepaid.balance_after|floatformat:0 }} FCFA</td>
+            </tr>
+        </table>
+    </div>
+
+    {% if amount_prepaid.balance_after < 100 %}
+    <div class="alert-box">
+        <div class="alert-text">⚠ Solde Faible</div>
+        <div class="balance-info">Pensez à recharger votre compte prépayé</div>
+    </div>
+    {% endif %}
+    {% endif %}
+
+    <!-- Prepaid Credit (if overpayment) -->
+    {% if bills.overpayment_action == 'PREPAID' and not bills.amount_prepaid %}
+    <div class="prepaid-box">
+        <div class="prepaid-header">COMPTE PRÉPAYÉ CRÉDITÉ</div>
+        <table class="prepaid-table">
+            <tr>
+                <td class="prepaid-label">Montant crédité :</td>
+                <td class="prepaid-value">+{{ bills.refund|floatformat:0 }} FCFA</td>
+            </tr>
+            <tr class="balance-row">
+                <td class="prepaid-label">Nouveau Solde :</td>
+                <td class="prepaid-value">{{ amount_prepaid.balance_after|floatformat:0 }} FCFA</td>
+            </tr>
+        </table>
+    </div>
+    {% endif %}
+
+    <!-- Note -->
+    <!-- <div class="note-box"> -->
+        <!-- <div class="note-title">NOTE IMPORTANTE</div> -->
+        <!-- <div class="note-text">
+            Les marchandises vendues ne sont<br>
+            ni remboursables, ni échangeables.<br>
+            Merci de vérifier votre commande.
+        </div> -->
+    <!-- </div> -->
+
+    <!-- Thank You -->
+    <div class="thank-you">
+        Merci et à bientôt !
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        Powered by MATRIX ERP 2.0
+    </div>
+</body>
+</html>

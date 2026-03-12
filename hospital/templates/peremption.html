@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load humanize %}
+{% load static %}
+<head>
+    <style type="text/css">
+        @page {
+            size: a4;
+            margin: 1cm;
+        }
+
+        .table {
+            border: 0.5px solid #ababab;
+            text-align: center;
+            table-layout: fixed;
+            margin-bottom: 5px;
+        }
+
+        .table tr td {
+            white-space: nowrap;
+        }
+
+        .table th {
+            padding: 5px;
+            vertical-align: top;
+            background-color: #e8e8e8;
+        }
+
+        .table td {
+            padding: 5px;
+            vertical-align: top;
+            -pdf-keep-with-next: false;
+            overflow: hidden;
+            text-overflow: ellipsis;
+
+
+        }
+    </style>
+</head>
+
+<body>
+<table>
+
+
+    <tr>
+        <td style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:13px;" colspan="2"
+            align="left"></td>
+    </tr>
+    {#<tr>#}
+    {#        <td style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:13px;"  colspan="2" align="center">Du : {{date}}</td>#}
+    {#      </tr>#}
+    <tr>
+        <td style="font-family:Verdana, Geneva, sans-serif; font-weight:500; font-size:15px;" colspan="2"
+            align="center">{{ hospital.name }}</td>
+    </tr>
+    <tr>
+        <td style="font-family:Verdana, Geneva, sans-serif; font-weight:200; font-size:13px;" colspan="2" align="center">
+            {{ hospital.slogan }}</td>
+    </tr>  
+    <tr>
+        <td style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:13px;" colspan="2"
+            align="center">{{ hospital.address }}</td>
+    </tr>  
+    <tr>
+        <td style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:13px;" colspan="2" align="center">
+            Tel : {{ hospital.phone }}</td>
+    </tr>
+    
+
+    {#<tr>#}
+    {#    <td colspan="2"><img src="logo.png" width="150"  /></td>#}
+    {#  </tr>#}
+     <tr>
+        <td colspan="2">
+        </td>
+    </tr>
+    
+<tr>
+        <td style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:17px;" colspan="2"
+            align="center"> {% if export == 'date' %} EXPIRATION DES PRODUITS {% else %} STOCK INSUFFISANT DES PRODUITS {% endif %}
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2">
+        </td>
+    </tr>
+</table>
+<table class="table">
+    <thead>
+    <tr>
+        <th style="color: black">Nom</th>
+        {% if export == 'date' %}
+        <th style="color: black">Code</th>
+        <th style="color: black">Date d'expiration</th>
+        {% else %}
+        <th style="color: black">Quantite</th>
+        <th style="color: black">Depot</th>
+        {% endif %}
+    </tr>
+    </thead>
+    <tbody>
+    {% for product in products %}
+        <tr style="text-align: center">
+            {% if export == 'date' %}
+            <td class="td">{{ product.name }}</td>
+            <td class="td">{{ product.code }}</td>
+            <td class="td">{{ product.expiry_date }}</td>
+            {% else %}
+            <td class="td">{{ product.product_name }}</td>
+            
+            <td class="td">{{ product.qte_stock }}</td>
+            <td class="td">{{ product.storage_depots.name }}</td>
+            {% endif %}
+        </tr>
+
+    {% endfor %}
+    </tbody>
+</table>
+
+
+{#<td width="51%" valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">#}
+{#      <div style="text-align:right"><span style="font-family:Verdana, Geneva, sans-serif; font-weight:600; font-size:13px; border-top:1px solid #333; border-bottom:1px solid #333;">Montant total:</span> {{MontantT}} FCFA</div>#}
+{#   <div style="text-align:right"><span style="font-family:Verdana, Geneva, sans-serif; font-weight:600; font-size:13px; border-top:1px solid #333; border-bottom:1px solid #333;">Montant perçu:</span> {{Advance}} FCFA</div>#}
+{#   <div style="text-align:right"><span style="font-family:Verdana, Geneva, sans-serif; font-weight:600; font-size:13px; border-top:1px solid #333; border-bottom:1px solid #333;">Reste a payer:</span> {{Left_to_pay}} FCFA</div>#}
+{#   <div style="text-align:right"><span style="font-family:Verdana, Geneva, sans-serif; font-weight:600; font-size:13px; border-top:1px solid #333; border-bottom:1px solid #333;">Remboursement:</span> {{Repayment}} FCFA</div>#}
+{##}
+{#    </table></td>#}
+
+</body>
+
+</html>

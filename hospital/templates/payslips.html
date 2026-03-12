@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load humanize %}
+{% load static %}
+{% load mathfilters %}
+{% load crispy_forms_tags %}
+{% csrf_token %}
+<head>
+    <style type="text/css">
+        @page {
+            size: a4;
+            margin: 1cm;
+        }
+
+        .table {
+            border: 0.5px solid #ababab;
+            text-align: center;
+            table-layout: fixed;
+            margin-bottom: 5px;
+        }
+
+        .table tr td {
+            white-space: nowrap;
+        }
+
+        .table th {
+            padding: 5px;
+            vertical-align: top;
+            background-color: #e8e8e8;
+        }
+
+        .table td {
+            padding: 5px;
+            vertical-align: top;
+            -pdf-keep-with-next: false;
+            overflow: hidden;
+            text-overflow: ellipsis;
+
+
+        }
+    </style>
+</head>
+<div class="ui segment itemscard">
+  <div class="content">
+    <table >
+    
+      <tbody>
+        <tr>
+          <td class="text-left" align="center" style="font-family:Verdana, Geneva, sans-serif; font-weight:900; font-size:20px;color: black" width="190">
+            <img id="logo" style="border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 5px;
+    width: 300px;" src="/media/logo.png">
+          </td>
+          <td class="text-left" align="center" style="font-family:Verdana, Geneva, sans-serif; font-weight:500; font-size:15px">
+          </td>
+          <td class="text-left" align="center" style="font-family:Verdana, Geneva, sans-serif; font-weight:700; font-size:15px;color: black">
+          </td>
+          <td class="text-left" align="center" style="font-family:Verdana, Geneva, sans-serif; font-weight:500; font-size:15px;color: black">
+          </td>
+          <td class="text-left" align="center" style="font-family:Verdana, Geneva, sans-serif; font-weight:700; font-size:15px;color: black">
+          </td>
+          <td class="text-left" align="center" style="font-family:Verdana, Geneva, sans-serif; font-weight:500; font-size:15px;color: black" width="230">
+           
+          </td>
+          
+        </tr>
+      </tbody>
+    </table>
+
+  </div>
+</div>
+<body>
+  
+<div>
+  <table>
+
+<!-- 
+    <tr>
+        <td style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:13px;" colspan="2"
+            align="left"></td>
+    </tr>
+    {#<tr>#}
+    {#        <td style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:13px;"  colspan="2" align="center">Du : {{date}}</td>#}
+    {#      </tr>#}
+    <tr>
+        <td style="font-family:Verdana, Geneva, sans-serif; font-weight:500; font-size:15px;" colspan="2"
+            align="center">{{ hospital.name }}</td>
+    </tr>
+    <tr>
+        <td style="font-family:Verdana, Geneva, sans-serif; font-weight:200; font-size:13px;" colspan="2" align="center">
+            {{ hospital.slogan }}</td>
+    </tr>  
+    <tr>
+        <td style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:13px;" colspan="2"
+            align="center">{{ hospital.address }}</td>
+    </tr>  
+    <tr>
+        <td style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:13px;" colspan="2" align="center">
+            Tel : {{ hospital.phone }}</td>
+    </tr>
+    
+
+    {#<tr>#}
+    {#    <td colspan="2"><img src="logo.png" width="150"  /></td>#}
+    {#  </tr>#}
+     <tr>
+        <td colspan="2">
+        </td>
+    </tr> -->
+    
+<tr>
+        <td style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:17px;" colspan="2"
+            align="center"> FICHE DE PAIE
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2">
+        </td>
+    </tr>
+</table>
+
+<div class="ui segment itemscard">
+  <div class="content">
+    <table class="ui celled table">
+    
+      <tbody>
+        <tr>
+          <td class="text-left" align="left" style="font-family:Verdana, Geneva, sans-serif; font-weight:500; font-size:12px;">
+            Période <span class="mono">du : {{monthStartDate}} au {{monthEndDate}}</span>
+          </td>
+          <!-- <td class="text-left" align="left">
+            <span class="mono">{{employee.firstName}} {{employee.lastName}}</span>
+          </td> -->
+          <td class="text-left" align="left" style="font-family:Verdana, Geneva, sans-serif; font-weight:500; font-size:12px;">
+            <span class="mono">Paiement le : </span>
+          </td>
+          
+          
+        </tr>
+      </tbody>
+    </table>
+
+  </div>
+</div>
+<div class="ui segment itemscard">
+  <div class="content">
+    <table class="ui celled table">
+    
+      <tbody>
+        <tr>
+          <td class="text-left" align="center" style="font-family:Verdana, Geneva, sans-serif; font-weight:500; font-size:11px;height: 60px;">
+             <div>Matricule</div><div><span class="mono">14C010</span></div>
+          </td>
+          <!-- <td class="text-left" align="left">
+            <span class="mono">{{employee.firstName}} {{employee.lastName}}</span>
+          </td> -->
+          <td class="text-left" align="center" style="font-family:Verdana, Geneva, sans-serif; font-weight:500; font-size:11px;">
+             <div><span class="mono" >Categorie</span></div>
+             <div><span class="mono"> </span></div>
+          </td>
+          <td class="text-left" align="center" style="font-family:Verdana, Geneva, sans-serif; font-weight:500; font-size:11px;">
+           <div><span class="mono">Echelon</span></div>
+           <div><span class="mono">A1 </span></div>
+          </td>
+          <td class="text-left" align="center" style="font-family:Verdana, Geneva, sans-serif; font-weight:500; font-size:11px;">
+            <div><span class="mono">Ancienneté</span></div>
+            <div><span class="mono"> 1 ans et 3 mois </span></div>
+          </td>
+          <td class="text-left" align="center" style="font-family:Verdana, Geneva, sans-serif; font-weight:500; font-size:11px;">
+            <div><span class="mono">N° de C.N.P.S Employé</span></div>
+            <div><span class="mono"> </span></div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+  </div>
+</div>
+
+<div class="ui segment itemscard">
+  <div class="content">
+    <table class="ui celled table">
+    
+      <tbody>
+        <tr>
+          <td class="text-left" align="left" style="font-family:Verdana, Geneva, sans-serif; font-weight:500; font-size:10px;">
+            <div>N° CNPS : </div>
+            <div>N° Cont: MB2JKHYBGHHJ751Q </div>
+            <div>RC : RC/YAO/2007/25/963 </div>
+          </td>
+          <!-- <td class="text-left" align="left">
+            <span class="mono">{{employee.firstName}} {{employee.lastName}}</span>
+          </td> -->
+          <td class="text-left" align="left" style="font-family:Verdana, Geneva, sans-serif; font-weight:500; font-size:10px;">
+            <div><span class="mono">Fonction : </span></div>
+            <div><span class="mono">{{employee.function.name}}</span></div>
+          </td>
+          <td class="text-left" align="left" style="font-family:Verdana, Geneva, sans-serif; font-weight:500; font-size:10px;">
+            <div><span class="mono">Qualification : </span></div>
+            <div><span class="mono">{{employee.recruitmentDiploma}}</span></div>
+          </td>
+
+          <td class="text-left" align="left" style="font-family:Verdana, Geneva, sans-serif; font-weight:500; font-size:10px;">
+            <div><span class="mono">Direction : </span></div>
+            <div><span class="mono"> </span></div>
+          </td>
+        </tr>
+
+      </tbody>
+    </table>
+
+  </div>
+</div>
+
+<div class="ui segment itemscard">
+  <div class="content">
+    <table class="ui celled table">
+    
+      <tbody>
+        <tr>
+          <td class="text-left" align="left" style="font-family:Verdana, Geneva, sans-serif; font-weight:500; font-size:11px;height: 60px;">
+            <div><span class="mono">Date d'embauche : </span></div>
+            <div><span class="mono">{{employee.dateEntryService}}</span></div>
+            
+          </td>
+          <!-- <td class="text-left" align="left">
+            <span class="mono">{{employee.firstName}} {{employee.lastName}}</span>
+          </td> -->
+          <td class="text-left" align="left" style="font-family:Verdana, Geneva, sans-serif; font-weight:500; font-size:11px;">
+            <div><span class="mono">Jours travaillés : </span></div>
+            <div><span class="mono">30</span></div>
+          </td>
+          <td class="text-left" align="left" style="font-family:Verdana, Geneva, sans-serif; font-weight:500; font-size:12px;">
+            <div><span class="mono">M./Mme. : {{employee.firstName}} {{employee.lastName}}</span></div>
+          </td>
+        </tr>
+
+      </tbody>
+    </table>
+
+  </div>
+</div>
+<table class="table">
+    <thead>
+    <tr>
+        <th style="color: black" rowspan="2">Designation</th>
+        <th style="color: black;width: 180px;" rowspan="2">Base</th>
+        <th style="color: black; width: 50px;" rowspan="2"><div>Nombre</div><div>/Taux</div></th>
+        <th style="color: black;width: 70px;" rowspan="2">Gain</th>
+        <th style="color: black;width: 80px;" rowspan="2">Retenue</th>
+        <th style="color: black;width: 80px;" colspan="2" style="text-align:center;">Part patronale</th>
+    </tr>
+    <tr>
+  <th style="color: black;width: 28px;">Taux</th>
+  <th style="color: black;width: 80px;">Retenue</th>
+</tr>
+    </thead>
+    <tbody>
+      <td class="td" style="font-family:Verdana, Geneva, sans-serif; font-weight:500; font-size:11px;border-bottom: 2px solid white;">Salaire de base</td>
+            <td class="td" style="font-family:Verdana, Geneva, sans-serif; font-weight:500; font-size:11px;border-bottom: 2px solid white;"> </td>
+            <td class="td" style="font-family:Verdana, Geneva, sans-serif; font-weight:500; font-size:11px;border-bottom: 2px solid white;"> </td>
+            <td class="td" style="font-family:Verdana, Geneva, sans-serif; font-weight:500; font-size:11px;border-bottom: 2px solid white;">{{ employee.baseSalary|stringformat:"0.0f" }}</td>
+            <td class="td" style="font-family:Verdana, Geneva, sans-serif; font-weight:500; font-size:11px;border-bottom: 2px solid white;"> </td>
+            <td class="td" style="font-family:Verdana, Geneva, sans-serif; font-weight:500; font-size:11px;border-bottom: 2px solid white;"> </td>
+            <td class="td" style="font-family:Verdana, Geneva, sans-serif; font-weight:500; font-size:11px;border-bottom: 2px solid white;"> </td>
+    </tbody>
+    <tbody>
+      
+    {% for prime in bonus %}
+    {% if prime.bonus %}
+        <tr>
+            <td class="td" style="font-family:Verdana, Geneva, sans-serif; font-weight:500; font-size:11px;border-bottom: 2px solid white;border-top: 2px solid white">{{ prime.bonus.name }}</td>
+            <td class="td" style="font-family:Verdana, Geneva, sans-serif; font-weight:500; font-size:11px;border-bottom: 2px solid white;border-top: 2px solid white">{{ prime.price|stringformat:"0.0f" }} </td>
+            <td class="td" style="font-family:Verdana, Geneva, sans-serif; font-weight:500; font-size:11px;border-bottom: 2px solid white;border-top: 2px solid white"> {{prime.rate}}</td>
+            <td class="td" style="font-family:Verdana, Geneva, sans-serif; font-weight:500; font-size:11px;border-bottom: 2px solid white;border-top: 2px solid white">{% with total_price=prime.price|mul:prime.rate %}
+   {% with total=total_price|div:100 %}
+  {{ total|stringformat:"0.0f" }}
+{% endwith %}
+{% endwith %} </td>
+            <td class="td" style="font-family:Verdana, Geneva, sans-serif; font-weight:500; font-size:11px;border-bottom: 2px solid white;border-top: 2px solid white"> </td>
+            <td class="td" style="font-family:Verdana, Geneva, sans-serif; font-weight:500; font-size:11px;border-bottom: 2px solid white;border-top: 2px solid white"> </td>
+            <td class="td" style="font-family:Verdana, Geneva, sans-serif; font-weight:500; font-size:11px;border-bottom: 2px solid white;border-top: 2px solid white"> </td>
+        </tr>
+        {% endif %}
+    {% endfor %}
+    </tbody>
+
+    <tbody>
+            <td class="td" style="font-family:Verdana, Geneva, sans-serif; font-weight:500; font-size:11px;border-bottom: 2px solid white;border-top: 2px solid white"> </td>
+            <td class="td"style="font-family:Verdana, Geneva, sans-serif; font-weight:500; font-size:11px;border-right: 1px solid white;border-bottom: 2px solid white;border-top: 2px solid white"> Total salaire brut </td>
+            <td class="td" style="font-family:Verdana, Geneva, sans-serif; font-weight:500; font-size:11px;border-bottom: 2px solid white;border-top: 2px solid white"> </td>
+            <td class="td" style="font-family:Verdana, Geneva, sans-serif; font-weight:500; font-size:11px;border-bottom: 2px solid white;">{% with total=employee.baseSalary|add:sum_bonus %}
+  {{ total|stringformat:"0.0f" }}
+{% endwith %}</td>
+            <td class="td" style="font-family:Verdana, Geneva, sans-serif; font-weight:500; font-size:11px;border-bottom: 2px solid white;border-top: 2px solid white"> </td>
+            <td class="td" style="font-family:Verdana, Geneva, sans-serif; font-weight:500; font-size:11px;border-bottom: 2px solid white;border-top: 2px solid white"> </td>
+            <td class="td" style="font-family:Verdana, Geneva, sans-serif; font-weight:500; font-size:11px;border-bottom: 2px solid white;border-top: 2px solid white"> </td>
+    </tbody>
+
+    <tbody>
+      
+    {% for prime in bonus %}
+    {% if prime.taxe %}
+        <tr>
+            <td class="td" style="font-family:Verdana, Geneva, sans-serif; font-weight:500; font-size:11px;border-bottom: 2px solid white;border-top: 2px solid white">{{ prime.taxe.description}} ({{ prime.taxe.name }})</td>
+            <td class="td" style="font-family:Verdana, Geneva, sans-serif; font-weight:500; font-size:11px;border-bottom: 2px solid white;border-top: 2px solid white">{{ prime.price|stringformat:"0.0f" }}</td>
+            <td class="td" style="font-family:Verdana, Geneva, sans-serif; font-weight:500; font-size:11px;border-bottom: 2px solid white;border-top: 2px solid white">{{prime.rate}} </td>
+            <td class="td" style="font-family:Verdana, Geneva, sans-serif; font-weight:500; font-size:11px;border-bottom: 2px solid white;border-top: 2px solid white"> </td>
+            <td class="td" style="font-family:Verdana, Geneva, sans-serif; font-weight:500; font-size:11px;border-bottom: 2px solid white;border-top: 2px solid white"> {% with total_price=prime.price|mul:prime.rate %}
+   {% with total=total_price|div:100 %}
+  {{ total|stringformat:"0.0f" }}
+{% endwith %}
+{% endwith %}</td>
+            <td class="td" style="font-family:Verdana, Geneva, sans-serif; font-weight:500; font-size:11px;border-bottom: 2px solid white;border-top: 2px solid white">{{prime.rate_employer}} </td>
+            <td class="td" style="font-family:Verdana, Geneva, sans-serif; font-weight:500; font-size:11px;border-bottom: 2px solid white;border-top: 2px solid white"> {% with total_price=prime.price|mul:prime.rate_employer %}
+   {% with total=total_price|div:100 %}
+  {{ total|stringformat:"0.0f" }}
+{% endwith %}
+{% endwith %}</td>
+        </tr>
+        {% endif %}
+    {% endfor %}
+    </tbody>
+
+    <tbody>
+            <td class="td" style="font-family:Verdana, Geneva, sans-serif; font-weight:500; font-size:11px;border-top: 2px solid white"> </td>
+            <td class="td" style="font-family:Verdana, Geneva, sans-serif; font-weight:500; font-size:11px;border-top: 2px solid white"> Total impots et cotisations </td>
+            <td class="td" style="font-family:Verdana, Geneva, sans-serif; font-weight:500; font-size:11px;border-top: 2px solid white"> </td>
+            <td class="td" style="font-family:Verdana, Geneva, sans-serif; font-weight:500; font-size:11px;border-top: 2px solid white"> </td>
+            <td class="td" style="font-family:Verdana, Geneva, sans-serif; font-weight:500; font-size:11px">{{sum_taxe|stringformat:"0.0f"}}</td>
+            <td class="td" style="font-family:Verdana, Geneva, sans-serif; font-weight:500; font-size:11px;border-top: 2px solid white"> </td>
+            <td class="td" style="font-family:Verdana, Geneva, sans-serif; font-weight:500; font-size:11px;"> {{sum_employer|stringformat:"0.0f"}}</td>
+    </tbody>
+    
+    <div class="ui raised very padded segment itemscard" style="background-color: #f9f9f9; border-radius: 10px;">>
+  <div style="overflow-x:auto;" class="content">
+    <table class="ui celled striped compact table" style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: 12px;">
+    
+      <tbody>
+        <tr class="center aligned">
+          <td class="text-left" align="center" style="font-family:Verdana, Geneva, sans-serif; font-weight:500; font-size:11px;background-color: #e0e1e2;height: 60px;">
+            Cumul 
+          </td>
+          <!-- <td class="text-left" align="left">
+            <span class="mono">{{employee.firstName}} {{employee.lastName}}</span>
+          </td> -->
+          <td class="text-left" align="center" style="font-family:Verdana, Geneva, sans-serif; font-weight:500; font-size:11px;background-color: #e0e1e2;">
+             <span class="mono" >Salaire de base</span>
+          </td>
+          <td class="text-left" align="center" style="font-family:Verdana, Geneva, sans-serif; font-weight:500; font-size:11px;background-color: #e0e1e2;">
+           <span class="mono">Salaire brut</span>
+          </td>
+          <td class="text-left" align="center" style="font-family:Verdana, Geneva, sans-serif; font-weight:500; font-size:11px;background-color: #e0e1e2;">
+            <span class="mono">Charges salariales</span>
+          </td>
+          <td class="text-left" align="center" style="font-family:Verdana, Geneva, sans-serif; font-weight:500; font-size:11px;background-color: #e0e1e2;">
+            <span class="mono">Charges patronales</span>
+          </td>
+          <td class="text-left" align="center" style="font-family:Verdana, Geneva, sans-serif; font-weight:500; font-size:11px;background-color: #e0e1e2;">
+            <span class="mono">Avantages nature</span>
+          </td>
+          <td class="text-left" align="center" style="font-family:Verdana, Geneva, sans-serif; font-weight:500; font-size:11px;background-color: #e0e1e2;">
+            <span class="mono">Salaire cotisable</span>
+          </td>
+          <td class="text-left" align="center" style="font-family:Verdana, Geneva, sans-serif; font-weight:500; font-size:11px;background-color: #e0e1e2;">
+            <span class="mono">Salaire imposable</span>
+          </td>
+          <td class="text-left" align="center" style="font-family:Verdana, Geneva, sans-serif; font-weight:500; font-size:11px;border-bottom: 1px solid white;border-top: 1px solid white;">
+            <span class="mono"> </span>
+          </td>
+          <td class="text-left" align="center" style="font-family:Verdana, Geneva, sans-serif; font-weight:500; font-size:11px;background-color: #e0e1e2; width: 120px;"">
+            <span class="mono">NET A PAYER</span>
+          </td>
+        </tr>
+        <tr>
+          <td class="text-left" align="center" style="font-family:Verdana, Geneva, sans-serif; font-weight:500; font-size:11px;height: 60px;">
+            <div><span class="mono" >Période</span></div>
+             <div><span class="mono">Année </span></div>
+          </td>
+          <!-- <td class="text-left" align="left">
+            <span class="mono">{{employee.firstName}} {{employee.lastName}}</span>
+          </td> -->
+          <td class="text-left" align="center" style="font-family:Verdana, Geneva, sans-serif; font-weight:500; font-size:11px;">
+             <div><span class="mono" > {{ employee.baseSalary|stringformat:"0.0f" }}</span></div>
+             <div><span class="mono"> {% with total=employee.baseSalary|mul:12 %}
+  {{ total|stringformat:"0.0f" }}
+{% endwith %} </span></div>
+          </td>
+          <td class="text-left" align="center" style="font-family:Verdana, Geneva, sans-serif; font-weight:500; font-size:11px;">
+           <div><span class="mono" > {{ sum_bonus|stringformat:"0.0f" }} </span></div>
+             <div><span class="mono"> {% with total=sum_bonus|mul:12 %}
+  {{ total|stringformat:"0.0f" }}
+{% endwith %}</span></div>
+          </td>
+          <td class="text-left" align="center" style="font-family:Verdana, Geneva, sans-serif; font-weight:500; font-size:11px;">
+            <div><span class="mono" > {{ sum_taxe|stringformat:"0.0f" }} </span></div>
+             <div><span class="mono">{% with total=sum_taxe|mul:12 %}
+  {{ total|stringformat:"0.0f" }}
+{% endwith %} </span></div>
+          </td>
+          <td class="text-left" align="center" style="font-family:Verdana, Geneva, sans-serif; font-weight:500; font-size:11px;">
+            <div><span class="mono" >{{ sum_employer|stringformat:"0.0f" }} </span></div>
+             <div><span class="mono"> {% with total=sum_employer|mul:12 %}
+  {{ total|stringformat:"0.0f" }}
+{% endwith %} </span></div>
+          </td>
+          <td class="text-left" align="center" style="font-family:Verdana, Geneva, sans-serif; font-weight:500; font-size:11px;">
+            <div><span class="mono" > </span></div>
+             <div><span class="mono"> </span></div>
+          </td>
+          <td class="text-left" align="center" style="font-family:Verdana, Geneva, sans-serif; font-weight:500; font-size:11px;">
+            <div><span class="mono" > </span></div>
+             <div><span class="mono"> </span></div>
+          </td>
+          <td class="text-left" align="center" style="font-family:Verdana, Geneva, sans-serif; font-weight:500; font-size:11px;">
+            <div><span class="mono" > </span></div>
+             <div><span class="mono"> </span></div>
+          </td>
+          <td class="text-left" align="center" style="font-family:Verdana, Geneva, sans-serif; font-weight:500; font-size:11px;border-bottom: 1px solid white;border-top: 1px solid white;">
+            <span class="mono" > </span>
+          </td>
+          <td class="text-left" align="center" style="font-family:Verdana, Geneva, sans-serif; font-weight:500; font-size:11px;">
+            <div><span class="mono" > </span></div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+  </div>
+</div>
+
+</body>
+
+</html>

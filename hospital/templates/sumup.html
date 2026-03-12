@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load humanize %}
+{% load static %}
+<head>
+    <style>
+        .boxes > div {
+            width: 100px;
+            height: 100px;
+            display: inline-block;
+            float: left;
+            background-color: red;
+            margin-right: 6px;
+        }
+        
+    </style>
+</head>
+<body>
+
+<div class="ui segment itemscard">
+    <div class="content">
+      <table >
+      
+        <tbody>
+          <tr>
+            <td class="text-left" align="center" style="font-family:Verdana, Geneva, sans-serif; font-weight:900; font-size:20px;color: black" width="120">
+              <img id="logo" style="border: 1px solid #ddd;
+      border-radius: 4px;
+      padding: 5px;
+      width: 200px;" src="/media/logo.png">
+            </td>
+            <td class="text-left" align="center" style="font-family:Verdana, Geneva, sans-serif; font-weight:500; font-size:18px">
+            </td>
+            <td class="text-left" align="center" style="font-family:Verdana, Geneva, sans-serif; font-weight:700; font-size:18px;color: black">
+            </td>
+            <td class="text-left" align="center" style="font-family:Verdana, Geneva, sans-serif; font-weight:500; font-size:18px;color: black">
+            </td>
+            <td class="text-left" align="center" style="font-family:Verdana, Geneva, sans-serif; font-weight:700; font-size:18px;color: black">
+            </td>
+            <td class="text-left" align="center" style="font-family:Verdana, Geneva, sans-serif; font-weight:500; font-size:18px;color: black" width="230">
+              <div><span class="mono">{{ hospital.name }}</span></div>
+              <div><span class="mono">{{ hospital.address }}</span></div>
+              <div><span class="mono">Tel: {{ hospital.phone }}</span></div>
+              <div><span class="mono">Email: {{ hospital.email }}</span></div>
+            </td>
+            
+          </tr>
+        </tbody>
+      </table>
+  
+    </div>
+  </div>
+  <br>
+  <table>
+  <tr>
+    <td style="font-family:Verdana, Geneva, sans-serif; font-weight:600; font-size:18px;" align="center" colspan="2">RESUME CONSULTATION</td>
+  </tr>
+  <tr>
+    <td style="font-family:Verdana, Geneva, sans-serif; font-weight:600; font-size:18px;" colspan="2" align="center">Date: {{ consultation.createdAt|date:'Y-m-d' }} à {{ consultation.timeAt|date:'H:i:s' }}</td>
+  </tr>
+  
+  <tr>
+    <td style="font-family:Verdana, Geneva, sans-serif; font-weight:600; font-size:18px;" align="center" colspan="2">Patient: {{ consultation.patient.name }}</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+  </tr>
+  </table>
+
+  <tr>
+    <td style="font-family:Verdana, Geneva, sans-serif; font-weight:1000; font-size:100px;" align="center"><div><span class="mono" style="font-family:Verdana, Geneva, sans-serif; font-weight:600; font-size:18px;">{{ details_consultation.sumup }}</span></div></td>
+  </tr>
+<table>
+
+    
+</table>
+</tr>
+
+</body>
+
+</html>

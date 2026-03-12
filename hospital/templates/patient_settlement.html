@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load humanize %}
+{% load static %}
+<head>
+    <style type="text/css">
+       @page{size: 76mm 297mm}
+.col-md-10 .line {
+        padding-left : 8vw;
+        background-color:red;
+        height:2px;
+        width:30%;
+    }
+ .table th {
+            padding: 5px;
+            vertical-align: top;
+            background-color: #0a908f;
+        }
+ @frame footer_frame {           /* Another static Frame */
+        -pdf-frame-content: footer_content;
+        left: 230pt;
+        width: 512pt;
+        top: 820pt;
+        height: 20pt;
+    }
+    .note{
+        border:1px solid #000;
+        padding:4px;
+        font-size:11px;
+        margin-top:6px;
+    }
+
+    .footer{
+        margin-top:4px;
+        font-size:11px;
+        font-style: italic;
+    }
+    .center { text-align: center; }
+    </style>
+</head>
+
+<body>
+    <tr>
+    <td class="w640">
+{#----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------#}
+        <table class="w640" cellpadding="0" cellspacing="0" border="0">
+            <tbody>
+                <tr>
+
+
+                <td class="w580" align="center">
+                    <div style="font-family:Verdana, Geneva, sans-serif; font-weight:500; font-size:15px;" colspan="1"
+                         align="center">
+                         <img id="logo" style="border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 5px;
+    width: 100px;" src="/media/logo.png"></div>
+                         
+
+                </td>
+
+            </tr>
+            <tr>
+
+
+                <td class="w580" align="left">
+                    <div style="font-family:Verdana, Geneva, sans-serif; font-weight:500; font-size:15px;" colspan="1"
+                         align="center"> {{ hospital.name }}</div>
+                         <div style="font-family:Verdana, Geneva, sans-serif; font-weight:500; font-size:13px;" colspan="2"
+                         align="center"> {{ hospital.phone }} | {{ hospital.email }}</div>
+
+                </td>
+
+            </tr>
+            <tr>
+                <td class="w580" align="left">
+                    <div style="font-family:Verdana, Geneva, sans-serif; font-weight:500; font-size:12px;" colspan="2"
+                         align="center"> Le {{ patient_settlement.createdAt }} à {{ patient_settlement.timeAt }}</div>
+                
+                         <div style="font-family:Verdana, Geneva, sans-serif; font-weight:500; font-size:12px;" colspan="2"
+                         align="center"> Reglement N°: {{ patient_settlement.code }}</div>
+                         
+                         <div style="font-family:Verdana, Geneva, sans-serif; font-weight:500; font-size:12px;" colspan="2"
+                         align="center"> Client: {{ patient_settlement.patient.name }}</div>
+               
+               
+                    <div style="font-family:Verdana, Geneva, sans-serif; font-weight:500; font-size:12px;" colspan="2"
+                         align="center">Caissier : {{ Cashier }}</div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </td>
+</tr>
+
+<div>
+    ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+    <table class="table" cellpadding="0" cellspacing="0" border="0" style="border-spacing:0;border-collapse: collapse;padding-left: 25px !important;">
+            <tbody>
+            <tr>
+              <div style="font-family:Verdana, Geneva, sans-serif; font-weight:500; font-size:13px ">
+                <td class="w580" tyle="font-family:Verdana, Geneva, sans-serif; font-weight:500; font-size:13px " align="center" width="50">
+                    Dette
+                </td>
+                </div>
+                <div style="font-family:Verdana, Geneva, sans-serif; font-weight:500; font-size:13px ">
+                <td class="w580" tyle="font-family:Verdana, Geneva, sans-serif; font-weight:500; font-size:13px " align="center" width="50">
+                  Mt recu
+                    
+                </td>
+                </div>
+                <div style="font-family:Verdana, Geneva, sans-serif; font-weight:500; font-size:13px ">
+                <td class="w580" tyle="font-family:Verdana, Geneva, sans-serif; font-weight:500; font-size:13px " align="center" width="50">
+                  Mt paye
+                   
+                </td>
+                </div>
+                <div style="font-family:Verdana, Geneva, sans-serif; font-weight:500; font-size:13px ">
+                <td class="w580" tyle="font-family:Verdana, Geneva, sans-serif; font-weight:500; font-size:13px " align="center" width="50">
+                    Rendu
+                </td> </div>
+                <div style="font-family:Verdana, Geneva, sans-serif; font-weight:500; font-size:13px ">
+                <td class="w580" tyle="font-family:Verdana, Geneva, sans-serif; font-weight:500; font-size:13px " align="center" width="50">
+                    Solde
+                </td>
+                </div>
+            </tr>
+            </tbody>
+        </table>
+
+</div>
+<table style="margin-top: -25px;">
+    <tr>
+        <td >
+            <table>
+                <tbody>
+                    <tr style="text-align: center;height: 50px">
+
+                    <td style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:12px"
+                        align="center" width="60">{{dette|floatformat:0 }}</td>
+                    <td style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:12px;"
+                        height="50" align="center"  width="50">{{ patient_settlement.amount_received|floatformat:0 }}</td>
+
+                    <td style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:12px;"
+                        height="50" align="center" width="50">
+                        {{ patient_settlement.amount_paid|floatformat:0 }}
+                        </td>
+                        
+                      <td style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:12px;"
+                        height="50" align="center" width="50">
+                        {{ patient_settlement.refund|floatformat:0 }}
+                        </td>
+
+                    <td style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:12px;"
+                        height="50" align="center"  width="50">{{ reste|floatformat:0 }}</td>
+                </tr>
+                
+                </tbody>
+                
+            </table>
+        </td>
+    </tr>
+</table>
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+<tr style="margin-top: -25px;">
+    <td class="w640">
+        <table class="w640" cellpadding="0" cellspacing="0" border="0">
+            <tbody>
+            <tr>
+
+                <td class="w580" align="left">
+                    <div style="font-family:Verdana, Geneva, sans-serif; font-weight:500; font-size:13px;" colspan="2"
+                         align="center"> {{ hospital.slogan }}</div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </td>
+</tr>
+
+</body>
+
+</html>
+

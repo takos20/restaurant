@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load humanize %}
+{% load static %}
+<head>
+    <style type="text/css">
+        @page {
+            size: a4;
+            margin: 1cm;
+        }
+
+        .table {
+            border: 0.5px solid #ababab;
+            text-align: center;
+            table-layout: fixed;
+            margin-bottom: 5px;
+        }
+
+        .table tr td {
+            white-space: nowrap;
+        }
+
+        .table th {
+            padding: 5px;
+            vertical-align: top;
+            background-color: #e8e8e8;
+        }
+
+        .table td {
+            padding: 5px;
+            vertical-align: top;
+            -pdf-keep-with-next: false;
+            overflow: hidden;
+            text-overflow: ellipsis;
+
+
+        }
+    </style>
+</head>
+
+<body>
+<table>
+    <tr>
+        <td style="font-family:Verdana, Geneva, sans-serif; font-weight:400; font-size:17px;" colspan="2"
+            align="center">{{ hospital.name }}</td>
+    </tr>
+    <tr>
+        <td style="font-family:Verdana, Geneva, sans-serif; font-weight:400; font-size:15px;" colspan="2"
+            align="center">{{ hospital.address }}</td>
+    </tr>
+    <tr>
+        <td style="font-family:Verdana, Geneva, sans-serif; font-weight:400; font-size:15px;" colspan="2" align="center">
+            Tel : {{ hospital.phone }}</td>
+    </tr>
+    
+    <tr>
+        <td style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:13px;" colspan="2"
+            align="left"></td>
+    </tr>
+    <tr>
+        <td style="font-family:Verdana, Geneva, sans-serif; font-weight:200; font-size:13px;" colspan="2"
+            align="center">RECLAMATION N°: {{ claim.code }}
+        </td>
+    </tr>
+
+    <tr>
+        <td style="font-family:Verdana, Geneva, sans-serif; font-weight:200; font-size:13px;" colspan="2"
+            align="center">Du : {{ claim.createdAt|date:'Y-m-d' }}
+        </td>
+    </tr>
+    <tr>
+        <td style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:13px;" colspan="2"
+            align="left"></td>
+    </tr>
+    {% comment %} <tr>
+        <td class="w580" align="left">
+            <div style="font-family:Verdana, Geneva, sans-serif; font-weight:400; font-size:13px;" colspan="2"
+                 align="center"> RECLAMATION N°: {{ claim.code }}</div>
+            <div style="font-family:Verdana, Geneva, sans-serif; font-weight:400; font-size:13px;" colspan="2"
+                 align="center">Du : {{ claim.createdAt|date:'Y-m-d' }} à {{ claim.timeAt }}</div>
+        </td>
+    </tr>
+    <tr>
+        <td style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:13px;" colspan="2"
+            align="left"></td>
+    </tr> {% endcomment %}
+    {#<tr>#}
+    {#        <td style="font-family:Verdana, Geneva, sans-serif; font-weight:300; font-size:13px;"  colspan="2" align="center">Du : {{date}}</td>#}
+    {#      </tr>#}
+
+    {#<tr>#}
+    {#    <td colspan="2"><img src="logo.png" width="150"  /></td>#}
+    {#  </tr>#}
+
+    <tr>
+        <td colspan="2">
+        </td>
+    </tr>
+</table>
+<table class="table">
+    <thead>
+    <tr>
+        <th style="color: black">Désignation</th>
+        <th style="color: black">Anomalie</th>
+        {% for claim in detail_claim %}
+            {% if claim.other_anomaly %}
+        <th style="color: black">Autres anomalie</th>
+        {% endif %}
+        {% endfor %}
+        <th style="color: black">Quantité</th>
+        <th style="color: black">Prix unitaire(en FCFA)</th>
+        <th style="color: black">Prix total(en FCFA)</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for claim in detail_claim %}
+        <tr style="text-align: center">
+            {% if claim.product %}
+            <td class="td">{{ claim.product.name }}</td>
+            {% elif claim.reagent %}
+            <td class="td">{{ claim.reagent.name }}</td>
+            {% elif claim.consumable %}
+            <td class="td">{{ claim.consumable.name }}</td>
+            {% endif %}
+            {% if claim.type_anomaly == 'MISSING_PRODUCTS' %}
+            <td class="td">Produits manquants</td>
+        {% elif claim.type_anomaly == 'EXPIRED_PRODUCTS' %}
+        <td class="td">Produits périmés</td>
+        {% elif claim.type_anomaly == 'DAMAGED_PRODUCTS' %}
+        <td class="td">Produits endommagés</td>
+        {% elif claim.type_anomaly == 'POOR_QUALITY_PRODUCTS' %}
+        <td class="td">Produits de mauvaise qualité</td>
+        {% elif claim.type_anomaly == 'OTHER_ANOMALY' %}
+        <td class="td">Autres anomalies</td>
+        {% elif claim.type_anomaly == 'EXCESS_PRODUCTS' %}
+        <td class="td">Produits en trop</td>
+        {% endif %}
+            {% if claim.other_anomaly %}
+            <td class="td">{{ claim.other_anomaly }}</td>
+        {% endif %}
+            <td class="td">{{ claim.quantity }}</td>
+            <td class="td">{{ claim.arrival_price }}</td>
+            <td class="td">{{ claim.total_amount }}</td>
+    
+        </tr>
+
+    {% endfor %}
+    </tbody>
+</table>
+
+
+{#<td width="51%" valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">#}
+{#      <div style="text-align:right"><span style="font-family:Verdana, Geneva, sans-serif; font-weight:600; font-size:13px; border-top:1px solid #333; border-bottom:1px solid #333;">Montant total:</span> {{MontantT}} FCFA</div>#}
+{#   <div style="text-align:right"><span style="font-family:Verdana, Geneva, sans-serif; font-weight:600; font-size:13px; border-top:1px solid #333; border-bottom:1px solid #333;">Montant perçu:</span> {{Advance}} FCFA</div>#}
+{#   <div style="text-align:right"><span style="font-family:Verdana, Geneva, sans-serif; font-weight:600; font-size:13px; border-top:1px solid #333; border-bottom:1px solid #333;">Reste a payer:</span> {{Left_to_pay}} FCFA</div>#}
+{#   <div style="text-align:right"><span style="font-family:Verdana, Geneva, sans-serif; font-weight:600; font-size:13px; border-top:1px solid #333; border-bottom:1px solid #333;">Remboursement:</span> {{Repayment}} FCFA</div>#}
+{##}
+{#    </table></td>#}
+
+</body>
+
+</html>

@@ -3305,7 +3305,7 @@ class DetailsBillsViewSet(viewsets.ModelViewSet):
     #     return Response(data=content, status=status.HTTP_200_OK)
 
 class BillViewSet(viewsets.ModelViewSet):
-    queryset = Bills.objects.filter(deleted=False)
+    queryset = Bills.objects.all()
     serializer_class = BillsSerializer
     renderer_classes = [JSONRenderer]
     permission_classes = (IsAuthenticated, DjangoModelPermissions)
@@ -3320,7 +3320,7 @@ class BillViewSet(viewsets.ModelViewSet):
         qs = (
             Bills.objects
             .select_related('hospital')   # très important
-            .filter(deleted=False, cash__user_id=user.id, cash__is_active=True)
+            .filter(cash__user_id=user.id, cash__is_active=True)
         )
 
         if user.hospital_id:
@@ -3794,94 +3794,6 @@ class BillViewSet(viewsets.ModelViewSet):
         else:
             errors = {"user": ["No permission allowed."]}
             return Response(errors, status=status.HTTP_400_BAD_REQUEST)
-        
-    @action(detail=False, methods=['get'], url_path='details_hospitalisation')
-    def get_details_hospitalisation(self, request, *args, **kwargs):
-        user = self.request.user
-                # 1. Optimiser la requête ORM : select_related et prefetch_related
-        queryset = self.filter_queryset(self.get_queryset()).exclude(deleted=True)
-
-        # 2. Calculer les sommes en une seule requête
-        aggregates = queryset.aggregate(
-            sum_ca=Sum('net_payable'),
-            sum_unpaid=Sum('balance'),
-            sum_paid=Sum('amount_paid')
-        )
-
-        # 3. Sérialisation avec fields limités (si vous avez un serializer dynamique)
-        serializer = BillsSerializerAnalysis(
-            queryset,
-            many=True,
-            fields=(
-                'id', 'code', 'bill_type', 'createdAt', 'timeAt', 'doctor', 'patient',
-                'bills_amount', 'patient_name', 'amount_received',
-                'cash', 'cash_code', 'cashier_name', 'balance', 'details',
-                'amount_gross', 'amount_paid'
-            )
-        ).data
-
-        # 4. Préparer la réponse
-        content = {
-            'content': serializer,
-            'sum_ca': aggregates['sum_ca'],
-            'sum_unpaid': aggregates['sum_unpaid'],
-            'sum_paid': aggregates['sum_paid']
-        }
-        if 'print' in request.query_params:
-            html_render = get_template('print.html')
-            # logo = settings.MEDIA_ROOT + '/logo.png'
-            html_content = html_render.render(
-                {'products': get_details_bills_all, 'bills': bills,
-                    'hospital': user.hospital,
-                    'url': request.build_absolute_uri('/'),
-                    'Cashier': user.username})
-            result = BytesIO()
-            pdf = pisa.pisaDocument(BytesIO(html_content.encode("UTF-16")), result,
-                                    link_callback=link_callback)
-            if not pdf.err:                       
-                response = HttpResponse(content_type='application/pdf')
-                filename = 'Facture' + '.pdf'
-                response['Content-Disposition'] = 'inline; filename="' + filename + '"'
-                response['Access-Control-Expose-Headers'] = 'Content-Disposition,X-Suggested-Filename'
-                response.write(result.getvalue())
-                return response
-            else:
-                errors = {"pdf": ["Error to generate PDF."]}
-                return Response(data=errors, status=status.HTTP_500)
-        # patient_id = self.request.query_params.get("patient_id")
-        # get_bills = Bills.objects.filter(patient_id=patient_id).aggregate(Sum('balance'))['balance__sum']
-        # content = {'content': {'solde_patient': get_bills}}
-        return Response(data=content, status=status.HTTP_200_OK)
-
-    @action(detail=False, methods=['get'], url_path='details_hospitalisation/print')
-    def get_details_hospitalisation_print(self, request, *args, **kwargs):
-        user=self.request.user
-        queryset = self.filter_queryset(self.get_queryset()).exclude(deleted=True)
-        serializer = BillsSerializer(queryset, many=True).data
-
-        sum_unpaid = queryset.aggregate(Sum('balance'))
-        sum_paid = queryset.aggregate(Sum('amount_paid'))
-        sum_total = queryset.aggregate(Sum('net_payable'))
-        if 'balance' in self.request.query_params:
-            html_render = get_template('export_bills_analysis_unpaid.html')
-        else:
-            html_render = get_template('export_bills_analysis.html')
-        html_content = html_render.render(
-            {'bills': serializer, 'hospital': user.hospital, 'sum_unpaid': sum_unpaid['balance__sum'],
-             'sum_paid': sum_paid['amount_paid__sum'], 'sum_total': sum_total['net_payable__sum'],
-             'date': datetime.today().strftime("%Y-%m-%d %H:%M:%S")})
-        result = BytesIO()
-        pdf = pisa.pisaDocument(BytesIO(html_content.encode("utf-16")), result,
-                                        link_callback=link_callback)
-        if not pdf.err:
-            response = HttpResponse(result.getvalue(), content_type='application/pdf')
-            filename = 'Export' + datetime.today().strftime("%Y-%m-%d %H:%M:%S") + '.pdf'
-            response['Content-Disposition'] = 'inline; filename="' + filename + '"'
-            response['Access-Control-Expose-Headers'] = 'Content-Disposition,X-Suggested-Filename'
-            return response
-        else:
-            errors = {"pdf": ["Error to generate PDF."]}
-            return Response(data=errors, status=status.HTTP_500)
 
 
     @action(detail=False, methods=['post'], url_path='name/exists')

@@ -305,6 +305,26 @@ class BillsForm(forms.ModelForm):
     is_proforma = forms.BooleanField(required=False)
     is_proforma_valid = forms.BooleanField(required=False)
 
+    address = forms.CharField(max_length=2555, required=False)
+    delivery_fee = forms.FloatField(required=False)
+    delivery_service = forms.CharField(max_length=255, required=False)  # Glovo, interne
+    delivery_man = forms.CharField(max_length=255, required=False)
+
+    event_name = forms.CharField(max_length=255, required=False)
+    organizer = forms.CharField(max_length=255, required=False)
+    location = forms.CharField(max_length=2555, required=False)
+    event_start = forms.CharField(max_length=255, required=False)
+    event_end = forms.CharField(max_length=255, required=False)
+    estimated_guests = forms.IntegerField(required=False)
+    contract_amount = forms.FloatField(required=False)
+
+    company_name = forms.CharField(max_length=255, required=False)
+    event_date = forms.CharField(max_length=255, required=False)
+    event_location = forms.CharField(max_length=2555, required=False)
+    advance_payment = forms.FloatField(required=False)
+    balance_due = forms.FloatField(required=False)
+    contact_person = forms.IntegerField(required=False)
+
     class Meta:
         model = Bills
         fields = '__all__'

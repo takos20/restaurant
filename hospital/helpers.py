@@ -7,7 +7,7 @@ from django.db import connections
 from django.utils import timezone
 import psycopg2
 import logging
-from hospital.models import BILL_SHAPE_CHOICES, BILLS_CHOICES, PATIENT_SHAPE_CHOICES, Bills, Archive, Cash, ComposeIngredient, ComposePreparation, ComposePreparationTranslation, DetailsComposeIngredient, DetailsComposePreparation, DetailsPatientAccount, ExtendedPermission, Ingredient, MovementStock, Patient, BackupFile, PromotionRule, Stock, Storage_depots
+from hospital.models import BILL_SHAPE_CHOICES, BILLS_CHOICES, PATIENT_SHAPE_CHOICES, Bills, Archive, Cash, CateringInfo, ComposeIngredient, ComposePreparation, ComposePreparationTranslation, DeliveryInfo, DetailsComposeIngredient, DetailsComposePreparation, DetailsPatientAccount, EventInfo, ExtendedPermission, Ingredient, MovementStock, Patient, BackupFile, PromotionRule, Stock, Storage_depots
 from datetime import datetime, timedelta, date
 from django.core.management import call_command
 from django.db import models
@@ -167,6 +167,37 @@ def setup_hospital_permissions(hospital):
     
     return permissions_created
 from django.utils import timezone
+
+def save_bills(get_bills, request):
+    if request.data['bill_type'] == 'DELIVERY':
+        get_bills.address = request.data.get('address', None)
+        get_bills.delivery_fee = request.data.get('delivery_fee', None)
+        get_bills.delivery_service = request.data.get('delivery_service', None)
+        get_bills.delivery_man = request.data.get('delivery_man', None)
+        DeliveryInfo.objects.create(hospital = request.user.hospital, bills_id = get_bills.id, address = request.data.get('address', None),delivery_fee = request.data.get('delivery_fee', None),delivery_service = request.data.get('delivery_service', None),delivery_man = request.data.get('delivery_man', None))
+
+    if request.data['bill_type'] == 'EVENT':
+        get_bills.event_start = request.data.get('event_start', None)
+        get_bills.event_end = request.data.get('event_end', None)
+        get_bills.event_name = request.data.get('event_name', None)
+        get_bills.organizer = request.data.get('organizer', None)
+        get_bills.location = request.data.get('location', None)
+        get_bills.contract_amount = request.data.get('contract_amount', None)
+        get_bills.estimated_guests = request.data.get('estimated_guests', None)
+
+        EventInfo.objects.create(hospital = request.user.hospital, bills_id = get_bills.id, event_start = request.data.get('event_start', None),event_end = request.data.get('event_end', None),event_name = request.data.get('event_name', None),organizer = request.data.get('organizer', None),location = request.data.get('location', None),contract_amount = request.data.get('contract_amount', None),estimated_guests = request.data.get('estimated_guests', None))
+
+    if request.data['bill_type'] == 'CATERING':
+        get_bills.contact_person = request.data.get('contact_person', None)
+        get_bills.advance_payment = request.data.get('advance_payment', None)
+        get_bills.company_name = request.data.get('company_name', None)
+        get_bills.balance_due = request.data.get('balance_due', None)
+        get_bills.event_date = request.data.get('event_date', None)
+        get_bills.event_location = request.data.get('event_location', None)
+
+        CateringInfo.objects.create(hospital = request.user.hospital, bills_id = get_bills.id, contact_person = request.data.get('contact_person', None),advance_payment = request.data.get('advance_payment', None),company_name = request.data.get('company_name', None),balance_due = request.data.get('balance_due', None),event_date = request.data.get('event_date', None),event_location = request.data.get('event_location', None))
+
+    get_bills.save()
 
 def rule_match(rule, context):
 

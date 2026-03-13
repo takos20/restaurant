@@ -828,6 +828,29 @@ class Bills(SyncBaseModel):
     is_shared = models.BooleanField(default=False, null=True)  # Partagé entre structures
     hospital = models.ForeignKey(Hospital, on_delete=models.CASCADE, null=True)
     district = models.ForeignKey(District, on_delete=models.CASCADE, null=True)
+
+    address = models.TextField(null=True,)
+    delivery_fee = models.FloatField(default=0, null=True,)
+    delivery_service = models.CharField(max_length=100, null=True, blank=True)  # Glovo, interne
+    delivery_man = models.CharField(max_length=100, null=True, blank=True)
+    # expected_duration  = models.IntegerField(default=0, null=True, blank=True)
+    # expected_time = models.DateTimeField(null=True, blank=True)
+
+    event_name = models.CharField(max_length=150,null=True,)
+    organizer = models.CharField(max_length=150,null=True,)
+    location = models.TextField(null=True,)
+    event_start = models.DateTimeField(null=True,)
+    event_end = models.DateTimeField(null=True,)
+    estimated_guests = models.IntegerField(null=True,)
+    contract_amount = models.FloatField(default=0)
+
+    company_name = models.CharField(max_length=150, null=True,)
+    event_date = models.DateField(null=True,)
+    event_location = models.TextField(null=True,)
+    advance_payment = models.FloatField(default=0)
+    balance_due = models.FloatField(default=0)
+    contact_person = models.IntegerField(default=0, null=True, blank=True)
+
     storage_depots = models.ForeignKey(Storage_depots, on_delete=models.CASCADE, null=True, blank=True)
     cash = models.ForeignKey(Cash, on_delete=models.CASCADE, null=True)
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE, null=True, related_name='bills')

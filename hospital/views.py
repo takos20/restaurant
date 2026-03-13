@@ -70,7 +70,7 @@ from decimal import Decimal, ROUND_HALF_UP
 
 
 from .helpers import apply_promotions, apply_reduction, checkContent, checkContentPhone, destocker, destocker_compose, get_applicable_reduction, get_future_remise_notification, get_prepaid_account_detail, link_callback, archive, get_last_date_of_month, get_first_date_of_month, get_back, get_archive, \
-    delete_archive, normalize_rules, restore, backup_all, setup_hospital_permissions, split_entry_exit
+    delete_archive, normalize_rules, restore, backup_all, save_bills, setup_hospital_permissions, split_entry_exit
 
 
 def home_view(request):
@@ -2672,14 +2672,20 @@ class DetailsBillsViewSet(viewsets.ModelViewSet):
                 detailsBills.user_id = user.id
                 detailsBills.hospital = user.hospital
                 detailsBills.storage_depots_id = request.data['storage_depots']
-                bills = Bills.objects.filter(hospital = user.hospital, id=request.data['bills']).last()
-                bills.storage_depots_id = request.data['storage_depots']
-                bills.save()
+
                 
                 if request.data['cash']:
                     get_cash = Cash.objects.filter(hospital=user.hospital,id=request.data['cash'], user_id=user.id, is_active=True).last()
                 else:
                     get_cash = Cash.objects.filter(hospital=user.hospital, user_id=user.id, is_active=True).last()
+                
+                bills = Bills.objects.filter(hospital = user.hospital, id=request.data['bills']).last()
+                bills.bill_type = request.data['bill_type']
+                bills.patient_id = request.data['patient']
+                bills.district_id = request.data['district']
+                bills.cash_id = get_cash.id
+                bills.storage_depots_id = request.data['storage_depots']
+                bills.save()
                 if get_cash:
                     reduction = 0
                     if 'type' in request.data and request.data['type']=='free':
@@ -2753,12 +2759,7 @@ class DetailsBillsViewSet(viewsets.ModelViewSet):
                                 detailsBills.cost_production = total['total_amount__sum']
                                 detailsBills.margin = float(detailsBills.amount_net) - float(total['total_amount__sum'])
                                 detailsBills.save()
-                                get_bills = Bills.objects.filter(id = request.data['bills'], hospital=user.hospital).last()
-                                get_bills.bill_type = request.data['bill_type']
-                                get_bills.cash_id = get_cash.id
-                                get_bills.patient_id = request.data['patient']
-                                get_bills.district_id = request.data['district']
-                                get_bills.save()
+                                # save_bills(get_bills=bills, request=request)
                                 serializer = self.get_serializer(detailsBills, many=False)
                                 content = {
                                     'data': serializer.data,
@@ -2819,11 +2820,7 @@ class DetailsBillsViewSet(viewsets.ModelViewSet):
                             detailsBills.cost_production = total['total_amount__sum']
                             detailsBills.margin = float(detailsBills.amount_net) - float(total['total_amount__sum'])
                             detailsBills.save()
-                            get_bills = Bills.objects.filter(id = request.data['bills'], hospital=user.hospital).last()
-                            get_bills.bill_type = request.data['bill_type']
-                            get_bills.cash_id = get_cash.id
-                            get_bills.patient_id = request.data['patient']
-                            get_bills.save()
+                            # save_bills(get_bills=bills, request=request)
                             serializer = self.get_serializer(detailsBills, many=False)
                             content = {
                                 'data': serializer.data,
@@ -2933,12 +2930,7 @@ class DetailsBillsViewSet(viewsets.ModelViewSet):
                                     detailsBills.cost_production = total['total_amount__sum']
                                     detailsBills.margin = float(detailsBills.amount_net) - float(total['total_amount__sum'])
                                     detailsBills.save()
-                                    get_bills = Bills.objects.filter(id = request.data['bills'], hospital=user.hospital).last()
-                                    get_bills.bill_type = request.data['bill_type']
-                                    get_bills.cash_id = get_cash.id
-                                    get_bills.patient_id = request.data['patient']
-                                    get_bills.district_id = request.data['district']
-                                    get_bills.save()
+                                    # save_bills(get_bills=bills, request=request)
                                     serializer = self.get_serializer(detailsBills, many=False)
                                     content = {
                                         'data': serializer.data,
@@ -2974,12 +2966,7 @@ class DetailsBillsViewSet(viewsets.ModelViewSet):
                                     detailsBills.cost_production = total['total_amount__sum']
                                     detailsBills.margin = float(detailsBills.amount_net) - float(total['total_amount__sum'])
                                     detailsBills.save()
-                                    get_bills = Bills.objects.filter(id = request.data['bills'], hospital=user.hospital).last()
-                                    get_bills.bill_type = request.data['bill_type']
-                                    get_bills.cash_id = get_cash.id
-                                    get_bills.patient_id = request.data['patient']
-                                    get_bills.district_id = request.data['district']
-                                    get_bills.save()
+                                    # save_bills(get_bills=bills, request=request)
                                     serializer = self.get_serializer(detailsBills, many=False)
                                     content = {
                                         'data': serializer.data,
@@ -3049,12 +3036,7 @@ class DetailsBillsViewSet(viewsets.ModelViewSet):
                                     detailsBills.cost_production = total['total_amount__sum']
                                     detailsBills.margin = float(detailsBills.amount_net) - float(total['total_amount__sum'])
                                     detailsBills.save()
-                                    get_bills = Bills.objects.filter(id = request.data['bills'], hospital=user.hospital).last()
-                                    get_bills.bill_type = request.data['bill_type']
-                                    get_bills.cash_id = get_cash.id
-                                    get_bills.patient_id = request.data['patient']
-                                    get_bills.district_id = request.data['district']
-                                    get_bills.save()
+                                    # save_bills(get_bills=bills, request=request)
                                     serializer = self.get_serializer(detailsBills, many=False)
                                     content = {
                                         'data': serializer.data,
@@ -3376,8 +3358,7 @@ class BillViewSet(viewsets.ModelViewSet):
                         errors = {"Recipe": ["No recipe for this dishe."]}
                         return Response(errors, status=status.HTTP_400_BAD_REQUEST)
                     # bill.margin = price_sell_ligne(bill)
-                    
-                bills.save()
+                save_bills(get_bills=bills, request=request)  
             
                 if request.data['amount_paid'] != '0':
                     if PatientSettlement.objects.filter(hospital = user.hospital,patient_id=request.data['patient'], deleted=False,bills_id=bills.id):
@@ -3736,6 +3717,16 @@ class BillViewSet(viewsets.ModelViewSet):
             get_bills.deleted_by = user.username
             get_bills.deletedAt = timezone.now()
             get_bills.save()
+            if get_bills.bill_type != 'ONSITE':
+                get_delivery = DeliveryInfo.objects.filter(bills_id=get_bills.id, hospital = get_bills.hospital).last()
+                get_cetring = CateringInfo.objects.filter(bills_id=get_bills.id, hospital = get_bills.hospital).last()
+                get_event = EventInfo.objects.filter(bills_id=get_bills.id, hospital = get_bills.hospital).last()
+                if get_event:
+                    get_event.update(delete=True)
+                if get_cetring:
+                    get_cetring.update(delete=True)
+                if get_delivery:
+                    get_delivery.update(delete=True)
             return Response(status=status.HTTP_204_NO_CONTENT)
             # else:
             #     errors = {"permission": ["permission not allowed."]}

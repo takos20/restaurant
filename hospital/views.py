@@ -5182,7 +5182,7 @@ class BillViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=['get'], url_path='current')
     def current_bills(self, request, *args, **kwargs):
         
-        queryset = self.filter_queryset(self.get_queryset()).filter(cash__user_id=self.request.user.id, cash__is_active=True, deleted=False)
+        queryset = self.filter_queryset(self.get_queryset()).filter(cash__user_id=self.request.user.id, cash__is_active=True)
 
         serializer = BillsSerializer(queryset, many=True, fields=('id', 'bills','cash', 'code', 'patient', 'patient_account', 'amount_received', 'amount_paid', 'phone_number', 'bills_date', 'bill_type', 'additional_info', 'refund', 'tva', 'bills_amount', 'balance', 'refund', 'createdAt', 'timeAt', 'bank_card_number', 'phone_number_momo', 'phone_number_om', 'amount_om', 'amount_momo', 'amount_prepaid','amount_bank_card', 'amount_cash')).data
         content = {'content': serializer}

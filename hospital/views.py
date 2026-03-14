@@ -6274,8 +6274,8 @@ class DetailsSuppliesViewSet(viewsets.ModelViewSet):
             # Get the last matching entry
             get_details = DetailsSupplies.objects.filter(**filters).last()
             if get_details:
-                get_details.quantity_two = request.data["quantity_two"]
-                get_details.quantity = request.data["quantity"]
+                get_details.quantity_two = request.data.get("quantity_two", 0)
+                get_details.quantity = request.data.get("quantity", 0)
                 get_details.save()
                 return Response(status=status.HTTP_201_CREATED)
 
@@ -6324,8 +6324,8 @@ class DetailsSuppliesViewSet(viewsets.ModelViewSet):
         if get_bills:
             get_bills.arrival_price = Decimal(request.data["arrival_price"])
             get_bills.business_unit = request.data["business_unit"]
-            get_bills.quantity = Decimal(request.data["quantity"])
-            get_bills.quantity_two = request.data["quantity_two"]
+            get_bills.quantity = Decimal(request.data.get("quantity", 0))
+            get_bills.quantity_two = request.data.get("quantity_two", 0)
             get_bills.timeAt = timezone.now().time()
             get_bills.total_amount = Decimal(request.data["total_amount"])
             get_bills.unit_price = Decimal(request.data["total_amount"]) / Decimal(request.data["quantity"])

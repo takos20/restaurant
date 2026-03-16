@@ -3080,17 +3080,17 @@ class DetailsBillsViewSet(viewsets.ModelViewSet):
             ingredient.save()
 
         # if get_details:
-        total = DetailsBillsIngredient.objects.filter(details_bills_id=get_details.id,hospital=user.hospital).aggregate(Sum('total_amount'))
+        total_details_ingredient = DetailsBillsIngredient.objects.filter(details_bills_id=get_details.id,hospital=user.hospital).aggregate(Sum('total_amount'))
                             
-        get_details.cost_production = total['total_amount__sum']
-        get_details.margin = float(int(request.data['quantity_served']) * int(request.data['pun'])) - float(total['total_amount__sum'])
-        get_details.quantity_served = request.data['quantity_served']
-        get_details.pub = request.data['pub']
-        get_details.pun = request.data['pun']
-        get_details.delivery = request.data['delivery']
+        get_details.cost_production = total_details_ingredient['total_amount__sum']
+        # get_details.margin = float(int(request.data['quantity_served']) * int(request.data['pun'])) - float(total['total_amount__sum'])
+        get_details.quantity_served = get_details.quantity_served - get_details.quantity_served
+        # get_details.pub = request.data['pub']
+        # get_details.pun = request.data['pun']
+        get_details.delivery = 0
         get_details.amount_net = int(request.data['quantity_served']) * int(request.data['pun'])
         get_details.amount_gross = int(request.data['quantity_served'])* int(request.data['pub'])
-        get_details.save()
+        # get_details.save()
         result = DetailsBills.objects.filter(
             hospital=user.hospital,
             patient=request.data['patient'],
@@ -3107,6 +3107,7 @@ class DetailsBillsViewSet(viewsets.ModelViewSet):
         pun_initial = float(get_details.pub)
         quantity = int(request.data['quantity_served'])
         result, cummulative = apply_promotions(get_details)
+        print(result, cummulative)
         if result == True and cummulative == True:
             if user.hospital.rules_reduction and get_details.dish.is_delivery == True and  user.hospital.use_delivery == True:
                 
@@ -3117,6 +3118,8 @@ class DetailsBillsViewSet(viewsets.ModelViewSet):
 
                 if future_remise["should_notify"]:
                     reduction = future_remise
+                    get_details.margin = float(int(request.data['quantity_served']) * request.data['pun']) - float(total_details_ingredient['total_amount__sum'])
+                    get_details.quantity_served = request.data['quantity_served']
                 elif quantity > 1 and future_remise["should_notify"]:
                     if future_remise["should_notify"] == 50:
                         pun_reduit, total = apply_reduction(
@@ -3124,6 +3127,8 @@ class DetailsBillsViewSet(viewsets.ModelViewSet):
                             quantity=quantity,
                             reduction_value=current_remise['reduction']
                         )
+                        get_details.margin = float(int(request.data['quantity_served']) * pun_reduit) - float(total_details_ingredient['total_amount__sum'])
+                        get_details.quantity_served = request.data['quantity_served']
                         get_details.delivery = current_remise['reduction']
                         get_details.pun = pun_reduit
                         get_details.amount_net = total
@@ -3136,6 +3141,8 @@ class DetailsBillsViewSet(viewsets.ModelViewSet):
                         quantity=quantity,
                         reduction_value=current_remise['reduction']
                     )
+                    get_details.margin = float(int(request.data['quantity_served']) * pun_reduit) - float(total_details_ingredient['total_amount__sum'])
+                    get_details.quantity_served = request.data['quantity_served']
                     get_details.delivery = current_remise['reduction']
                     get_details.pun = pun_reduit
                     get_details.amount_net = total
@@ -3169,9 +3176,13 @@ class DetailsBillsViewSet(viewsets.ModelViewSet):
 
                 future_remise = get_future_remise_notification(count_dish, rules)
                 current_remise = get_applicable_reduction(count_dish, rules)
+                print(count_dish, current_remise)
 
                 if future_remise["should_notify"]:
                     reduction = future_remise
+                    get_details.margin = float(int(request.data['quantity_served']) * request.data['pun']) - float(total_details_ingredient['total_amount__sum'])
+                    get_details.quantity_served = request.data['quantity_served']
+                    get_details.pun = int(request.data['pub']) - (int(request.data['pub'])*int(request.data['delivery'])/100)
 
                 elif current_remise["should_apply"]:
                     pun_reduit, total = apply_reduction(
@@ -3180,7 +3191,8 @@ class DetailsBillsViewSet(viewsets.ModelViewSet):
                         reduction_value=current_remise['reduction']
                     )
         
-
+                    get_details.margin = float(int(request.data['quantity_served']) * pun_reduit) - float(total_details_ingredient['total_amount__sum'])
+                    get_details.quantity_served = request.data['quantity_served']
                     get_details.delivery = current_remise['reduction']
                     get_details.pun = pun_reduit
                     get_details.amount_net = total

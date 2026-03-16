@@ -169,7 +169,7 @@ class ExtendedGroupSerializer(DynamicFieldsModelSerializer):
 
     class Meta:
         model = ExtendedGroup
-        fields = ['id', 'group_name', 'hospital']
+        fields = ['id', 'group_name', 'hospital', 'permissions']
 
     def get_group_name(self, obj):
         return obj.group.name if obj.group else None

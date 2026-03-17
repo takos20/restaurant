@@ -1173,7 +1173,7 @@ class CashViewSet(viewsets.ModelViewSet):
         serializer = Cash_movementSerializer(get_cash_movment, many=True, fields=('id', 'code', 'cash', 'motive','expenses_nature', 'type','amount_movement', 'createdAt', 'timeAt'))
         get_settlement = PatientSettlement.objects.selected_related('cash').filter(cash_id=request.query_params.get("id"), deleted=False)
         serializer_settle = PatientSettlementSerializer(get_settlement, many=True)
-        content = {'content': {'cash': get_cash, 'cash_movement': serializer.data,
+        content = {'content': {'cash_movement': serializer.data,
                                 'settlement': serializer_settle.data}}
         return Response(data=content, status=status.HTTP_200_OK)
         # else:

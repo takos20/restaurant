@@ -685,12 +685,12 @@ class StockViewSet(viewsets.ModelViewSet):
             if 'export' in request.query_params:
                 html_render = get_template('peremption.html')
                 if request.query_params.get('export')=='qty':
-                    # logo = settings.MEDIA_ROOT + '/logo.png'
+                    # logo = settings.MEDIA_ROOT + '/logo2.png'
                     html_content = html_render.render(
                         {'products': queryset, 'export': 'qty',
                             'hospital': get_hospital})
                 else:
-                    # logo = settings.MEDIA_ROOT + '/logo.png'
+                    # logo = settings.MEDIA_ROOT + '/logo2.png'
                     html_content = html_render.render(
                         {'products': queryset_expired, 'export': 'date',
                             'hospital': get_hospital})
@@ -1493,7 +1493,7 @@ class Cash_movementViewSet(viewsets.ModelViewSet):
                         serializer = self.get_serializer(cash_movement, many=False)
                         if 'print' in request.query_params:
                             html_render = get_template('print_cash_movement.html')
-                            # logo = settings.MEDIA_ROOT + '/logo.png'
+                            # logo = settings.MEDIA_ROOT + '/logo2.png'
                             html_content = html_render.render(
                                 {'products': serializer.data,
                                 'hospital': user.hospital,
@@ -1531,7 +1531,7 @@ class Cash_movementViewSet(viewsets.ModelViewSet):
             if 'print' in request.query_params:
                 html_render = get_template('print_cash_movement.html')
                 
-                # logo = settings.MEDIA_ROOT + '/logo.png'
+                # logo = settings.MEDIA_ROOT + '/logo2.png'
                 html_content = html_render.render(
                     {'products': serializer.data,
                         'hospital': self.request.user.hospital,
@@ -3489,7 +3489,7 @@ class BillViewSet(viewsets.ModelViewSet):
                     else:
 
                         
-                        # logo = settings.MEDIA_ROOT + '/logo.png'
+                        # logo = settings.MEDIA_ROOT + '/logo2.png'
                         html_content = html_render.render(
                             {'products': get_details_bills_all, 'bills': bills,
                             'hospital': user.hospital,
@@ -3539,13 +3539,13 @@ class BillViewSet(viewsets.ModelViewSet):
             'Cashier': user.username})
         else:
             
-            # logo = settings.MEDIA_ROOT + '/logo.png'
+            # logo = settings.MEDIA_ROOT + '/logo2.png'
             html_content = html_render.render(
                 {'products': get_details_bills, 'bills': bills,
                 'hospital': user.hospital,
                 'url': request.build_absolute_uri('/'),
                 'Cashier': user.username})
-        # logo = settings.MEDIA_ROOT + '/logo.png'
+        # logo = settings.MEDIA_ROOT + '/logo2.png'
         html_content = html_render.render(
             {'products': get_details_bills, 'bills': bills,
                 'hospital': user.hospital,
@@ -3640,7 +3640,7 @@ class BillViewSet(viewsets.ModelViewSet):
         #                 get_details_bills_all = DetailsBills.objects.filter(hospital = user.hospital,cash__user_id=request.data['cashier'],
         #                                                                     bills_id=bills, deleted=False)
         #                 html_render = get_template('print.html')
-        #                 # logo = settings.MEDIA_ROOT + '/logo.png'
+        #                 # logo = settings.MEDIA_ROOT + '/logo2.png'
         #                 html_content = html_render.render(
         #                     {'products': get_details_bills_all, 'bills': bills,
         #                     'hospital': user.hospital,
@@ -5215,7 +5215,7 @@ class BillViewSet(viewsets.ModelViewSet):
             queryset = self.filter_queryset(self.get_queryset()).filter(hospital_id=self.request.user.hospital.id)
             serializer = self.get_serializer(queryset, many=True, ).data
             html_render = get_template('details_client_dish.html')
-            # logo = settings.MEDIA_ROOT + '/logo.png'
+            # logo = settings.MEDIA_ROOT + '/logo2.png'
             html_content = html_render.render(
                 {'lignes': qs,
                 'hospital': self.request.user.hospital,
@@ -5384,7 +5384,7 @@ class PatientSettlementViewSet(viewsets.ModelViewSet):
                     #                                                 bills_id=bills).filter(deleted=False)
                     html_render = get_template('patient_settlement.html')
                     get_detail_account = get_prepaid_account_detail(request, reference_id=patient_settlement.id,user=user, source='SETTLE')
-                    # logo = settings.MEDIA_ROOT + '/logo.png'
+                    # logo = settings.MEDIA_ROOT + '/logo2.png'
                     if get_detail_account:
 
                         html_content = html_render.render(
@@ -5435,9 +5435,9 @@ class PatientSettlementViewSet(viewsets.ModelViewSet):
                 # get_details_bills = DetailsBills.objects.filter(cash__user_id=request.data['cashier'],
                 #                                                 bills_id=bills).filter(deleted=False)
                 html_render = get_template('patient_settlement.html')
-                # logo = settings.MEDIA_ROOT + '/logo.png'
+                # logo = settings.MEDIA_ROOT + '/logo2.png'
                 get_detail_account = get_prepaid_account_detail(request, reference_id= patient_settlement.id,user=user, source='SETTLE')
-                    # logo = settings.MEDIA_ROOT + '/logo.png'
+                    # logo = settings.MEDIA_ROOT + '/logo2.png'
                 if get_detail_account:
 
                     html_content = html_render.render(
@@ -6494,7 +6494,7 @@ class DetailsPatientAccountViewSet(viewsets.ModelViewSet):
         queryset = self.filter_queryset(self.get_queryset()).filter(hospital_id=self.request.user.hospital.id)
         serializer = self.get_serializer(queryset, many=True, ).data
         html_render = get_template('extrait_compte.html')
-        # logo = settings.MEDIA_ROOT + '/logo.png'
+        # logo = settings.MEDIA_ROOT + '/logo2.png'
         html_content = html_render.render(
             {'lignes': serializer,
             'hospital': self.request.user.hospital,

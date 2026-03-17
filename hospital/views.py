@@ -3908,7 +3908,7 @@ class BillViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=['get', 'post', 'DELETE'], url_path='all_cash_movements')
     def all_cash_movements(self, request, *args, **kwargs):
         user=self.request.user
-        get_cash = Cash.objects.filter(hospital = user.hospital, is_active=True, type_cash='CASH_COUNTERS').last()
+        get_cash = Cash.objects.filter(hospital = user.hospital, is_active=True, type_cash='CASH_COUNTERS', user_id=user.id).last()
 
         # serializer_cash = CashSerializer(Cash.objects.filter(id=self.request.query_params.get('id'), deleted=False), many=False,  fields=('id', 'code', 'cash_fund', 'balance','is_active', 'user', 'open_date', 'balance' ))
         if 'hospital' in self.request.query_params:

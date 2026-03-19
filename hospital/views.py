@@ -69,7 +69,7 @@ from openpyxl.styles import Alignment, Font
 from decimal import Decimal, ROUND_HALF_UP
 
 
-from .helpers import apply_promotions, apply_reduction, checkContent, checkContentPhone, destocker, destocker_compose, get_applicable_reduction, get_future_remise_notification, get_prepaid_account_detail, link_callback, archive, get_last_date_of_month, get_first_date_of_month, get_back, get_archive, \
+from .helpers import apply_promotions, apply_reduction, checkContent, checkContentPhone, destocker, destocker_compose, first_date_of_month, get_applicable_reduction, get_future_remise_notification, get_prepaid_account_detail, last_date_of_month, link_callback, archive, get_last_date_of_month, get_first_date_of_month, get_back, get_archive, \
     delete_archive, normalize_rules, restore, backup_all, save_bills, setup_hospital_permissions, split_entry_exit
 
 
@@ -3297,7 +3297,7 @@ class DetailsBillsViewSet(viewsets.ModelViewSet):
     #     serializer = DetailsBillsSerializer(get_product, many=True)
     #     content = {'content': serializer.data}
     #     return Response(data=content, status=status.HTTP_200_OK)
-
+from django.db.models.functions import TruncDate
 class BillViewSet(viewsets.ModelViewSet):
     queryset = Bills.objects.all()
     serializer_class = BillsSerializer
@@ -4245,18 +4245,26 @@ class BillViewSet(viewsets.ModelViewSet):
             user_hospital = self.request.user.hospital
         if user_hospital:
             
-            bills = Bills.objects.filter(hospital=user_hospital,createdAt__range=[startdate, enddate], deleted=False, bill_type=self.request.query_params.get('type')).values(days=F('createdAt')).annotate(turnover=Sum('amount_paid'))
+            bills = Bills.objects.filter(hospital=user_hospital,createdAt__range=[startdate, enddate], deleted=False, bill_type=self.request.query_params.get('type')).annotate(
+                days=TruncDate('createdAt')
+            ).values('days').annotate(
+                turnover=Sum('amount_paid')
+            ).order_by('days')
         else:
             
-            bills = Bills.objects.filter(createdAt__range=[startdate, enddate], deleted=False, bill_type=self.request.query_params.get('type')).values(days=F('createdAt')).annotate(turnover=Sum('amount_paid'))
+            bills = Bills.objects.filter(createdAt__range=[startdate, enddate], deleted=False, bill_type=self.request.query_params.get('type')).annotate(
+                days=TruncDate('createdAt')
+            ).values('days').annotate(
+                turnover=Sum('amount_paid')
+            ).order_by('days')
 
 
 
         if self.request.query_params.get('type') == 'pdf':
-            sum_total = bills.order_by('days').aggregate(Sum('turnover'))
+            sum_total = bills.aggregate(Sum('turnover'))
             html_render = get_template('export_stat_days.html')
             html_content = html_render.render(
-                {'bills': bills.order_by('days'), 'hospital': user_hospital, 'sum_total': sum_total['turnover__sum'],
+                {'bills': bills, 'hospital': user_hospital, 'sum_total': sum_total['turnover__sum'],
                  'month': date_month.split("-")[1], 'year': date_month.split("-")[0],
                  'date': datetime.today().strftime("%Y-%m-%d %H:%M:%S")})
             result = BytesIO()
@@ -4311,15 +4319,23 @@ class BillViewSet(viewsets.ModelViewSet):
         else:
             user_hospital = self.request.user.hospital
         if user_hospital:
-            bills = Bills.objects.filter(hospital=user_hospital,createdAt__range=[startdate, enddate], deleted=False).values(days=F('createdAt')).annotate(turnover=Sum('amount_paid'))
+            bills = Bills.objects.filter(hospital=user_hospital,createdAt__range=[startdate, enddate], deleted=False).annotate(
+                days=TruncDate('createdAt')
+            ).values('days').annotate(
+                turnover=Sum('amount_paid')
+            ).order_by('days')
         else:
-            bills = Bills.objects.filter(createdAt__range=[startdate, enddate], deleted=False).values(days=F('createdAt')).annotate(turnover=Sum('amount_paid'))
-
+            bills = Bills.objects.filter(createdAt__range=[startdate, enddate], deleted=False).annotate(
+                days=TruncDate('createdAt')
+            ).values('days').annotate(
+                turnover=Sum('amount_paid')
+            ).order_by('days')
+ 
         if self.request.query_params.get('type') == 'pdf':
-            sum_total = bills.order_by('days').aggregate(Sum('turnover'))
+            sum_total = bills.aggregate(Sum('turnover'))
             html_render = get_template('export_stat_days.html')
             html_content = html_render.render(
-                {'bills': bills.order_by('days'), 'hospital': user_hospital, 'sum_total': sum_total['turnover__sum'],
+                {'bills': bills, 'hospital': user_hospital, 'sum_total': sum_total['turnover__sum'],
                  'month': date_month.split("-")[1], 'year': date_month.split("-")[0],
                  'date': datetime.today().strftime("%Y-%m-%d %H:%M:%S")})
             result = BytesIO()
@@ -4345,7 +4361,7 @@ class BillViewSet(viewsets.ModelViewSet):
             # for bill in bills:
             #     labels.append(bill['category'])
             #     values.append(bill['turnover'])
-            content = {'content': bills.order_by('days')}
+            content = {'content': bills}
             return Response(data=content, status=status.HTTP_200_OK)
  
     @action(detail=False, methods=['post', 'get'], url_path='statistic_days_entry')
@@ -4370,15 +4386,23 @@ class BillViewSet(viewsets.ModelViewSet):
         else:
             user_hospital = self.request.user.hospital
         if user_hospital:
-            bills = Cash_movement.objects.filter(hospital=user_hospital,type='ENTRY',createdAt__range=[startdate, enddate], deleted=False).values(days=F('createdAt')).annotate(turnover=Sum('amount_movement'))
+            bills = Cash_movement.objects.filter(hospital=user_hospital,type='ENTRY',createdAt__range=[startdate, enddate], deleted=False).annotate(
+                days=TruncDate('createdAt')
+            ).values('days').annotate(
+                turnover=Sum('amount_movement')
+            ).order_by('days') 
         else:
-            bills = Cash_movement.objects.filter(type='ENTRY',createdAt__range=[startdate, enddate], deleted=False).values(days=F('createdAt')).annotate(turnover=Sum('amount_movement'))
+            bills = Cash_movement.objects.filter(type='ENTRY',createdAt__range=[startdate, enddate], deleted=False).annotate(
+                days=TruncDate('createdAt')
+            ).values('days').annotate(
+                turnover=Sum('amount_movement')
+            ).order_by('days') 
 
         if self.request.query_params.get('type') == 'pdf':
-            sum_total = bills.order_by('days').aggregate(Sum('turnover'))
+            sum_total = bills.aggregate(Sum('turnover'))
             html_render = get_template('export_stat_days.html')
             html_content = html_render.render(
-                {'bills': bills.order_by('days'), 'hospital': user_hospital, 'sum_total': sum_total['turnover__sum'],
+                {'bills': bills, 'hospital': user_hospital, 'sum_total': sum_total['turnover__sum'],
                  'month': date_month.split("-")[1], 'year': date_month.split("-")[0],
                  'date': datetime.today().strftime("%Y-%m-%d %H:%M:%S")})
             result = BytesIO()
@@ -4404,7 +4428,7 @@ class BillViewSet(viewsets.ModelViewSet):
             # for bill in bills:
             #     labels.append(bill['category'])
             #     values.append(bill['turnover'])
-            content = {'content': bills.order_by('days')}
+            content = {'content': bills}
             return Response(data=content, status=status.HTTP_200_OK)
     @action(detail=False, methods=['post', 'get'], url_path='statistic_days_exit')
     def get_statistic_days_exit(self, request):
@@ -4429,15 +4453,27 @@ class BillViewSet(viewsets.ModelViewSet):
         else:
             user_hospital = self.request.user.hospital
         if user_hospital:
-            bills = Cash_movement.objects.filter(hospital=user_hospital,type='EXIT',createdAt__range=[startdate, enddate], deleted=False).values(days=F('createdAt')).annotate(turnover=Sum('amount_movement'))
+            bills = Cash_movement.objects.filter(hospital=user_hospital,
+                type='EXIT',
+                createdAt__range=[startdate, enddate],
+                deleted=False
+            ).annotate(
+                days=TruncDate('createdAt')
+            ).values('days').annotate(
+                turnover=Sum('amount_movement')
+            ).order_by('days')        
         else:
-            bills = Cash_movement.objects.filter(type='EXIT',createdAt__range=[startdate, enddate], deleted=False).values(days=F('createdAt')).annotate(turnover=Sum('amount_movement'))
+            bills = Cash_movement.objects.filter(type='EXIT',createdAt__range=[startdate, enddate], deleted=False).annotate(
+                days=TruncDate('createdAt')
+            ).values('days').annotate(
+                turnover=Sum('amount_movement')
+            ).order_by('days') 
 
         if self.request.query_params.get('type') == 'pdf':
-            sum_total = bills.order_by('days').aggregate(Sum('turnover'))
+            sum_total = bills.aggregate(Sum('turnover'))
             html_render = get_template('export_stat_days.html')
             html_content = html_render.render(
-                {'bills': bills.order_by('days'), 'hospital': user_hospital, 'sum_total': sum_total['turnover__sum'],
+                {'bills': bills, 'hospital': user_hospital, 'sum_total': sum_total['turnover__sum'],
                  'month': date_month.split("-")[1], 'year': date_month.split("-")[0],
                  'date': datetime.today().strftime("%Y-%m-%d %H:%M:%S")})
             result = BytesIO()
@@ -4463,7 +4499,7 @@ class BillViewSet(viewsets.ModelViewSet):
             # for bill in bills:
             #     labels.append(bill['category'])
             #     values.append(bill['turnover'])
-            content = {'content': bills.order_by('days')}
+            content = {'content': bills}
             return Response(data=content, status=status.HTTP_200_OK)
 
     @action(detail=False, methods=['post', 'get'], url_path='stat_best_selling_products')
@@ -4598,15 +4634,23 @@ class BillViewSet(viewsets.ModelViewSet):
     def stat_day_month(self, request, *args, **kwargs):
         # For printing results
 
-        start_date_month = request.data['start_date']
+        # start_date_month = request.data['start_date']
         year_month = {}
         startdate = ''
         enddate = ''
         today = date.today()
-        if start_date_month is None:
+        year_month['year'] = today.year
+        year_month['month'] = today.month
+        # year = today.year
+        # month = today.month
+        # first_day = first_date_of_month(year=year, month=month)
+        # last_day = last_date_of_month(year=year, month=month)
+        start_date = datetime.strptime(
+            request.data['start_date'], "%Y-%m-%d"
+        ).date()
+        # print(first_day, last_day)
+        if start_date.year == today.year and start_date.month == today.month:
             
-            year_month['year'] = today.year
-            year_month['month'] = today.month
             startdate = get_first_date_of_month(year=int(year_month['year']), month=int(year_month['month']))
             enddate = get_last_date_of_month(year=int(year_month['year']), month=int(year_month['month']))
 

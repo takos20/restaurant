@@ -3677,15 +3677,19 @@ class BillViewSet(viewsets.ModelViewSet):
             get_details_bills = DetailsBills.objects.filter(hospital = user.hospital,bills_id=kwargs['pk'], deleted=False)
             if get_details_bills:
                 message= f'Effectue lors de la suppresion de la facture {get_details_bills.last().bills.code}'
-                save_mvt_entry = Supplies.objects.create(hospital = self.request.user.hospital, additional_info=message)
+                get_storage_depots = Storage_depots.object.get(hospital = user.hospital,is_default=True)
+                get_supplier = Suppliers.object.get(hospital = user.hospital,is_default=True)
+                save_mvt_entry = Supplies.objects.create(hospital = self.request.user.hospital, additional_info=message, storage_depots_id=get_storage_depots.id, suppliers_id=get_supplier.id)
                 for details in get_details_bills:
                     get_details_ingredient = DetailsBillsIngredient.objects.filter(hospital = user.hospital, details_bills_id = details.id).filter(deleted=False)
                     for ingredient in get_details_ingredient:
                         if ingredient.ingredient:
-                            get_ingredient = Stock.objects.filter(hospital = user.hospital, ingredient_id = ingredient.ingredient.id).last()
+                            get_ingredient = Stock.objects.filter(hospital = user.hospital, ingredient_id = ingredient.ingredient.id, storage_depots_id=get_storage_depots.id).last()
                             if get_ingredient:
                                 get_ingredient.quantity += Decimal(ingredient.quantity)
                                 get_ingredient.save()
+                            else:
+                                Stock.objects.create(hospital = user.hospital, ingredient_id = ingredient.ingredient.id, storage_depots_id=get_storage_depots.id, quantity = Decimal(ingredient.quantity))
                             get_detail=DetailsSupplies.objects.filter(hospital = self.request.user.hospital, supplies_id=save_mvt_entry.id, ingredient_id=ingredient.ingredient.id).last()
                             if get_detail:
                                 get_detail.quantity += Decimal(ingredient.quantity)
@@ -3697,6 +3701,8 @@ class BillViewSet(viewsets.ModelViewSet):
                             if get_ingredient:
                                 get_ingredient.quantity += Decimal(ingredient.quantity)
                                 get_ingredient.save()
+                            else:
+                                Stock.objects.create(hospital = user.hospital, ingredient_id = ingredient.ingredient.id, storage_depots_id=get_storage_depots.id, quantity = Decimal(ingredient.quantity))
                             get_ingredient_preparation = ComposePreparation.objects.filter(hospital = user.hospital, compose_ingredient_id = ingredient.compose_ingredient.id).last()
                             if get_ingredient_preparation:
                                 get_ingredient_preparation.stock_quantity += Decimal(ingredient.quantity)
@@ -3704,8 +3710,11 @@ class BillViewSet(viewsets.ModelViewSet):
                             get_details_ingredient = DetailsComposeIngredient.objects.filter(compose_ingredient_id = ingredient.compose_ingredient.id).filter(deleted=False)
                             for ingredient in get_details_ingredient:
                                 get_ingredient = Stock.objects.filter(hospital = user.hospital, ingredient_id = ingredient.ingredient.id).last()
-                                get_ingredient.quantity += Decimal(ingredient.quantity)
-                                get_ingredient.save()
+                                if get_ingredient:
+                                    get_ingredient.quantity += Decimal(ingredient.quantity)
+                                    get_ingredient.save()
+                                else:
+                                    Stock.objects.create(hospital = user.hospital, ingredient_id = ingredient.ingredient.id, storage_depots_id=get_storage_depots.id, quantity = Decimal(ingredient.quantity))
                                 get_detail=DetailsSupplies.objects.filter(hospital = self.request.user.hospital, supplies_id=save_mvt_entry.id, ingredient_id=ingredient.ingredient.id).last()
                                 if get_detail:
                                     get_detail.quantity += Decimal(ingredient.quantity)
